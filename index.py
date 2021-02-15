@@ -29,8 +29,8 @@ def build_index(in_dir, out_dict, out_postings):
     stemmer = PorterStemmer()
     index_dict = {}
     postings = {}
-    files = [f for f in listdir(in_dir) if isfile(join(in_dir,f))]
-    sorted_files = sorted(files,key=lambda f: int(os.path.splitext(f)[0]))
+    files = [f for f in listdir(in_dir) if isfile(join(in_dir,f))] #all files from directory
+    sorted_files = sorted(files,key=lambda f: int(os.path.splitext(f)[0])) #sorted files
     
     #Word_processing and tokenisation for each file
     for file in sorted_files:
@@ -47,28 +47,32 @@ def build_index(in_dir, out_dict, out_postings):
     			for word in nltk.word_tokenize(words):
     				word = stemmer.stem(word)
     				tokens.append(word)
+
     	for t in tokens:
     		if t not in index_dict:
     			index_dict[t] = 1
     			postings[t] = [int(file)]
     		else:
-    			doc_id = int(file)
-    			if doc_id not in postings[t]:
+    			if int(file) not in postings[t]:
     				index_dict[t]+=1
     				postings[t].append(int(file))
+
     #Save results to output dictionary and postings files
     output_post = open(output_file_postings,"w")
+    pointer = 1
     for token in postings:
-    	(posting, startPos, endPos) = add_skips(postings[token])
+    	posting= create_posting_list(postings[token])
     	output_post.write(posting+ '\n')
     	doc_frequency = index_dict[token]
-    	index_dict[token] = (doc_frequency,startPos,endPos)
+    	index_dict[token] = (doc_frequency,pointer)
+    	pointer+=1
+    print(index_dict)
     output_post.close()
     pickle.dump(index_dict,open(output_file_dictionary,"wb"))
-
-def add_skips(posting):
+    
+def create_posting_list(posting):
 	posting_list =[str(i) for i in list(posting)]
-	print('Processing posting: ', posting_list)
+	print('Adding skips to posting: ', posting_list)
 	interval = math.floor(math.sqrt(len(posting_list)))
 	print('Interval: ',interval)
 	posting = ''
@@ -79,7 +83,10 @@ def add_skips(posting):
 		posting+=p
 		posting+=' '
 		i+=1
-	return (posting, posting_list[0], posting_list[-1])
+	return posting
+
+def add_skips(posting):
+	pass
 
 input_directory = output_file_dictionary = output_file_postings = None
 
