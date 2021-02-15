@@ -57,32 +57,36 @@ def build_index(in_dir, out_dict, out_postings):
     				index_dict[t]+=1
     				postings[t].append(int(file))
 
-    #Save results to output dictionary and postings files
+    #Sort dictionary
+    temp_index_dict = sorted(index_dict.items())
+    sorted_index_dict = {}
+    for pointer,(key,value) in enumerate(temp_index_dict):
+    	pointer+=1 #Pointer starts from 1
+    	sorted_index_dict[key] = (value,pointer)#value:doc-frequency, pointer:line number
+    
+    #Save results postings file
     output_post = open(output_file_postings,"w")
-    pointer = 1
-    for token in postings:
-    	posting= create_posting_list(postings[token])
-    	output_post.write(posting+ '\n')
-    	doc_frequency = index_dict[token]
-    	index_dict[token] = (doc_frequency,pointer)
-    	pointer+=1
+    for word in sorted_index_dict:
+    	posting_list= create_posting_list(postings[word])
+    	output_post.write(posting_list+ '\n')
     output_post.close()
-    pickle.dump(index_dict,open(output_file_dictionary,"wb"))
 
+    #Save dictionary
+    pickle.dump(sorted_index_dict,open(output_file_dictionary,"wb"))
     print('done!')
     
 def create_posting_list(posting):
 	posting_list =[str(i) for i in list(posting)]
 	interval = math.floor(math.sqrt(len(posting_list)))
-	posting = ''
+	posting_str = ''
 	i = 1
 	for p in posting_list:
 		if interval>0 and i%interval ==0 and i!=1:
-			posting+='*{} '.format(interval)
-		posting+=p
-		posting+=' '
+			posting_str+='*{} '.format(interval)
+		posting_str+=p
+		posting_str+=' '
 		i+=1
-	return posting
+	return posting_str
 
 input_directory = output_file_dictionary = output_file_postings = None
 
