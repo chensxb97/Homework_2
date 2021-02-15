@@ -66,15 +66,14 @@ def build_index(in_dir, out_dict, out_postings):
     	doc_frequency = index_dict[token]
     	index_dict[token] = (doc_frequency,pointer)
     	pointer+=1
-    print(index_dict)
     output_post.close()
     pickle.dump(index_dict,open(output_file_dictionary,"wb"))
+
+    print('done!')
     
 def create_posting_list(posting):
 	posting_list =[str(i) for i in list(posting)]
-	print('Adding skips to posting: ', posting_list)
 	interval = math.floor(math.sqrt(len(posting_list)))
-	print('Interval: ',interval)
 	posting = ''
 	i = 1
 	for p in posting_list:
@@ -84,9 +83,6 @@ def create_posting_list(posting):
 		posting+=' '
 		i+=1
 	return posting
-
-def add_skips(posting):
-	pass
 
 input_directory = output_file_dictionary = output_file_postings = None
 
