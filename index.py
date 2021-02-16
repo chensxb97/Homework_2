@@ -51,15 +51,18 @@ def build_index(in_dir, out_dict, out_postings):
                 for word in nltk.word_tokenize(sentence):
                     word = stemmer.stem(word)
                     tokens.append(word)
-
-        for t in tokens:
-            if t not in index_dict:
-                index_dict[t] = 1
-                postings[t] = [int(file)]
+        # Populate the index_dict and postings 'dictionaries'
+        # index_dict = {token: token frequency}
+        # postings = {token: [list of files token exists in]}
+        for token in tokens:
+            if token in index_dict.keys():
+                # Account for repeated words in the same file
+                if int(file) not in postings[token]:
+                    index_dict[token] += 1
+                    postings[token].append(int(file))
             else:
-                if int(file) not in postings[t]:
-                    index_dict[t] += 1
-                    postings[t].append(int(file))
+                index_dict[token] = 1
+                postings[token] = [int(file)]
 
     # Sort dictionary
     temp_index_dict = sorted(index_dict.items())
