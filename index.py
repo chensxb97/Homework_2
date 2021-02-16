@@ -43,10 +43,10 @@ def build_index(in_dir, out_dict, out_postings):
     			if c not in list_punc:
     				new_line+=c
     		new_line = new_line.lower()
-    		for words in nltk.sent_tokenize(new_line):
-    			for word in nltk.word_tokenize(words):
-    				word = stemmer.stem(word)
-    				tokens.append(word)
+            for sentence in nltk.sent_tokenize(new_line):
+                for word in nltk.word_tokenize(sentence):
+                    word = stemmer.stem(word)
+                    tokens.append(word)
 
     	for t in tokens:
     		if t not in index_dict:
