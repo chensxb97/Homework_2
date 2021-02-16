@@ -15,7 +15,7 @@ class PostingList:
 			for doc_id in posting:
 				node = ListNode(doc_id)
 				self.add(node)
-  #get length
+	#get length
 	def get_length(self):
 		return self.length
 
@@ -65,8 +65,7 @@ class PostingList:
 				target_idx += self.skip_interval()
 			self.skip = True # set skip to true
 		return self
-    
-  #Prints the posting list
+	#Prints the posting list
 	def printList(self):
 		result = []
 		cur = self.head
@@ -75,8 +74,7 @@ class PostingList:
 			cur = cur.next
 		result.append(self.tail.doc_id)
 		print(result)
-    
-  #Resetting all skip markers to False
+	#Resetting all skip markers to False
 	def clear_skips(self):
 		if self.skip == True:
 			cur = self.head
