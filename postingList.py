@@ -1,11 +1,10 @@
 import math
-
-class PostingList:
+class postingList:
 
 	# Constructor
 	def __init__(self, posting=None):
 		self.length = 0
-		self.skip = False 
+		self.skip = False #Skip marker
 
 		if posting == None:
 			self.head = None #empty	
@@ -15,7 +14,7 @@ class PostingList:
 			for doc_id in posting:
 				node = ListNode(doc_id)
 				self.add(node)
-	#get length
+	# gets length
 	def get_length(self):
 		return self.length
 
@@ -38,11 +37,11 @@ class PostingList:
 		skip_interval = math.floor(math.sqrt(self.length))
 		return skip_interval
 
-	# identify node by index
+	# get a specific node according to its index
 	def get_node(self, idx):
 		cur = self.head
 		while idx > 0: # traversing nodes to reach specific node
-			curr = curr.next
+			cur = cur.next
 			idx -= 1
 		return cur
 
@@ -65,7 +64,7 @@ class PostingList:
 				target_idx += self.skip_interval()
 			self.skip = True # set skip to true
 		return self
-	#Prints the posting list
+	# prints posting list
 	def printList(self):
 		result = []
 		cur = self.head
@@ -74,7 +73,7 @@ class PostingList:
 			cur = cur.next
 		result.append(self.tail.doc_id)
 		print(result)
-	#Resetting all skip markers to False
+	# resets all skip markers to False
 	def clear_skips(self):
 		if self.skip == True:
 			cur = self.head
@@ -86,7 +85,6 @@ class PostingList:
 		return self
 
 class ListNode: 
-
 	# Constructor
 	def __init__(self, doc_id=None): 
 		self.doc_id = int(doc_id)
