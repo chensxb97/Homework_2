@@ -65,14 +65,14 @@ def build_index(in_dir, out_dict, out_postings):
     	sorted_index_dict[key] = (value,pointer)#value:doc-frequency, pointer:line number
     
     #Save results postings file
-    output_post = open(output_file_postings,"w")
+    output_post = open(out_postings, "w")
     for word in sorted_index_dict:
     	posting_list= create_posting_list(postings[word])
     	output_post.write(posting_list+ '\n')
     output_post.close()
 
     #Save dictionary
-    pickle.dump(sorted_index_dict,open(output_file_dictionary,"wb"))
+    pickle.dump(sorted_index_dict, open(out_dict, "wb"))
     print('done!')
     
 def create_posting_list(posting):
