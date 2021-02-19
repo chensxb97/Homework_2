@@ -12,7 +12,7 @@ from os import listdir
 from os.path import join, isfile
 from nltk.stem.porter import PorterStemmer
 
-# python index.py - i '<INSERT_PATH>\sample_data' - d dictionary.txt - p postings.txt
+# python index.py -i '<INSERT_PATH>\sample_data' -d dictionary.txt -p postings.txt
 
 
 def usage():
@@ -88,7 +88,7 @@ def build_index(in_dir, out_dict, out_postings):
         for file in block:
             file_path = join(in_dir, file)
             f = open(file_path, "r")
-            tokens = []
+            terms = set()
             for line in f:
                 new_line = ''
                 for c in line:
@@ -98,14 +98,14 @@ def build_index(in_dir, out_dict, out_postings):
                 for sentence in nltk.sent_tokenize(new_line):
                     for word in nltk.word_tokenize(sentence):
                         word = stemmer.stem(word)
-                        tokens.append(word)
-            for token in tokens:
-                key = sorted_dict[token][0]
-                if key in posting_dict.keys():
-                    if int(file) not in posting_dict[key]:
+                        terms.add(word)
+            for term in terms:
+                termID = sorted_dict[term][0]
+                if termID in posting_dict.keys():
+                    posting_dict[termID].append(int(file))
                         posting_dict[key].append(int(file))
                 else:
-                    posting_dict[key] = [int(file)]
+                    posting_dict[termID] = [int(file)]
         # Create and save postings
         postings = create_posting_lists(posting_dict)
         file_name = out_postings+'_{}.txt'.format(batch_number)
@@ -163,12 +163,17 @@ def count_files(dir):
 def create_posting_lists(posting_dict):
     sorted_postings = sorted(posting_dict.items())
     posting_lists = []
-    for (termId, postingArr) in sorted_postings:
+    prev = 1
+    for (termID, postingArr) in sorted_postings:
         posting_str = ''
+        posting_str += '\n' * (termID - prev)
+        posting_str += str(termID)
+        posting_str += ' '
         for i in postingArr:
             posting_str += str(i)
             posting_str += ' '
         posting_lists.append((posting_str))
+        prev = termID
     return posting_lists
 
 
