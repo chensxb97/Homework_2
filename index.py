@@ -155,7 +155,8 @@ def build_index(in_dir, out_dict, out_postings):
     for i in range(1,batch_number):
         os.remove("{}_{}.txt".format(out_postings,i))
 
-    #Save dictionary using pickle
+    # save dictionary using pickle
+    # dictionary is now {term : [termID, termFrequency,charOffSet,strLength]}
     pickle.dump(sorted_dict, open(out_dict, "wb"))
 
     print('done!')
