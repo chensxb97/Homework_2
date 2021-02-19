@@ -146,14 +146,18 @@ def build_index(in_dir, out_dict, out_postings):
     char_offset = 0
     for i in range(1, number_of_terms+1):
         line = linecache.getline(out_postings, i)
-        length_of_line = (len(line)-2)
         for key in sorted_dict.keys():
             if sorted_dict[key][0] == i:
                 tempArray = sorted_dict[key]
                 tempArray[2] = char_offset
                 sorted_dict[key] = tempArray
-        char_offset += length_of_line
-    # print(sorted_dict)
+        char_offset += len(line)
+    print(sorted_dict)
+
+    # HOW WE'RE GOING TO DO SEARCH - SEEK THE CHAR OFFSET - IT WORKS
+    # temp = open(out_postings, "r")
+    # temp.seek(9)
+    # print(temp.readline())
 
     # Save dictionary
     pickle.dump(sorted_dict, open(out_dict, "wb"))
