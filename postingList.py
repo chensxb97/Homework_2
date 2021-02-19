@@ -10,14 +10,17 @@ class ListNode:
 class postingList:
 	# Initilisation
 	def __init__(self, postingStr=None):
-		self.has_skips = False # whether list contains skips
-		self.length = 0 # length of list
-		self.head = None # first node
-		self.tail = None # last node
+		self.has_skips = False 
+		self.length = 0 
+		self.head = None 
+		self.tail = None 
 
+		# populate postingList
 		if postingStr != None:
-			for doc_id in postingStr:
-				self.insert(ListNode(doc_id)) # populate postingList
+			doc_ids = [int(i) for i in postingStr.split()]
+			doc_ids.sort()
+			for doc_id in doc_ids:
+				self.insert(ListNode(doc_id)) 
 
 	# insertion at back of list
 	def insert(self, node):
@@ -33,16 +36,20 @@ class postingList:
 	def getLength(self):
 		return self.length
 
-	# prints posting list
+	# prints list
 	def printList(self):
+		result = ''
 		cur = self.head
 		while cur.next!=None:
-			print(cur.doc_id)
-			print('->')
+			result+=str(cur.doc_id)
+			result+='->'
 			cur = cur.next
-		print('None')
+		if result == None:
+			print('Empty list')
+		else:
+			print(result[:-2])
 
-	# get node via search index
+	# gets node via search index
 	def getNode(self, index):
 		cur = self.head
 		while index > 0:
@@ -50,13 +57,9 @@ class postingList:
 			index -= 1
 		return cur
 
-	# checks if posting list has added skips
-	def isSkipped(self):
-		return self.has_skips()
-	
-	# calculate skip interval
+	# calculates skip interval
 	def skipInterval(self):
-		skip_interval = math.floor(math.sqrt(self.getLength()))
+		skip_interval = math.floor(math.sqrt(self.length))
 		return skip_interval
 
 	# sets the skip pointer of node1 to node2
@@ -65,9 +68,9 @@ class postingList:
 		node2 = self.getNode(idx2)
 		node1.skip_to = node2
 
-	# add skips to posting list
+	# adds skips to list
 	def addSkips(self):
-		if !self.isSkipped():
+		if self.has_skips == False:
 			node1 = 0 
 			skips = self.skipInterval()
 			node2 = skips
