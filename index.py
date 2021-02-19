@@ -64,7 +64,7 @@ def build_index(in_dir, out_dict, out_postings):
                 freq += 1
                 index_dict[term][1] = freq
             else:
-                index_dict[term] = [0, 1, 0]
+                index_dict[term] = [0, 1, 0, 0]
 
     # Sort dictionary
     sorted_index_dict_array = sorted(index_dict.items())
@@ -74,7 +74,7 @@ def build_index(in_dir, out_dict, out_postings):
         value[0] = termID+1
         sorted_dict[term] = value
     # print(sorted_dict)
-    # note sorted_dict is now a dictionary of {term : [termID, termFrequency, charrOffset]}
+    # note sorted_dict is now a dictionary of {term : [termID, termFrequency, charrOffset, postingListLength]}
 
     # Divide list of files to 10 batches(BSBI)
     count = count_files(in_dir)
@@ -116,13 +116,12 @@ def build_index(in_dir, out_dict, out_postings):
         batch_number += 1
 
     # Merge posting lists - BSBI
-
-    '''To FILL IN'''
     final_posting = {}
     number_of_terms = len(sorted_dict.keys())
-    print(number_of_terms)
+    print('No of terms: ',number_of_terms)
     open(out_postings, 'w').close()
     # For each term, read the relevant line from all blocks
+    char_offset = 0
     for i in range(1, number_of_terms+1):
         combined_lines = []
         for j in range(1, batch_number):
@@ -137,12 +136,36 @@ def build_index(in_dir, out_dict, out_postings):
         for l in combined_lines:
             combined_lines_str += str(l)
             combined_lines_str += ' '
-        combined_lines_str += '\n'
+        #combined_lines_str += '\n'
         with open(out_postings, 'a') as postings_file:
             postings_file.write(combined_lines_str)
+
+        # Add charOffset + string length to dictionary
+        for key in sorted_dict.keys():
+            if sorted_dict[key][0] == i:
+                tempArray = sorted_dict[key]
+                tempArray[2] = char_offset
+                tempArray[3] = len(combined_lines_str)
+                sorted_dict[key] = tempArray
+        char_offset += len(combined_lines_str)
+
+    pickle.dump(sorted_dict, open(out_dict, "wb"))
+    print('done!')
+
+    #TESTING
+    #print(sorted_dict)
+    #print('Char-offset for york', sorted_dict['york'][2])
+    #temp = open(out_postings, "r")
+    #print('SEEKING...')
+    #temp.seek(sorted_dict['york'][2],0)
+    #print(temp.read(sorted_dict['york'][3]))
+
+'''
+OLD CODE
     # print(sorted_dict)
 
-    # Add charOffset to dictionary
+
+    # Add charOffset + postingList length to dictionary
     char_offset = 0
     for i in range(1, number_of_terms+1):
         line = linecache.getline(out_postings, i)
@@ -152,20 +175,14 @@ def build_index(in_dir, out_dict, out_postings):
                 tempArray[2] = char_offset
                 sorted_dict[key] = tempArray
         char_offset += len(line)
-    print(sorted_dict)
-
+        char_offset += 
+ 
     # HOW WE'RE GOING TO DO SEARCH - SEEK THE CHAR OFFSET - IT WORKS
     # temp = open(out_postings, "r")
     # temp.seek(9)
     # print(temp.readline())
 
     # Save dictionary
-    pickle.dump(sorted_dict, open(out_dict, "wb"))
-    print('done!')
-
-
-''''
-OLD CODE
 
     # Save results postings file
     output_post = open(out_postings, "w")
@@ -173,13 +190,9 @@ OLD CODE
         posting_list = create_posting_lists(postings[word])
         output_post.write(posting_list + '\n')
     output_post.close()
-
     # Save dictionary
     pickle.dump(sorted_index_dict, open(out_dict, "wb"))
     print('done!')
-
-'''
-
 
 # def create_final_dict(dictionary):
 #     sorted_dict = {}
@@ -194,7 +207,7 @@ OLD CODE
 #         sorted_dict[key] = (termId, doc_freq, start, len(posting_str))
 #         start += len(posting_str)
 #     return sorted_dict
-
+'''
 
 def count_files(dir):
     return len([1 for x in list(os.scandir(dir)) if x.is_file()])
