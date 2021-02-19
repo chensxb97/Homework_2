@@ -15,7 +15,6 @@ from nltk.stem.porter import PorterStemmer
 
 # python index.py -i '<INSERT_PATH>\sample_data' -d dictionary.txt -p postings.txt
 
-
 def usage():
     print("usage: " +
           sys.argv[0] + " -i directory-of-documents -d dictionary-file -p postings-file")
@@ -30,7 +29,7 @@ def build_index(in_dir, out_dict, out_postings):
     # This is an empty method
     # Pls implement your code in below
 
-    # Initialisation
+    # initialisation
     list_punc = list(string.punctuation)
     stemmer = PorterStemmer()
     index_dict = {}
@@ -39,11 +38,11 @@ def build_index(in_dir, out_dict, out_postings):
     sorted_files = sorted(files, key=lambda f: int(
         os.path.splitext(f)[0]))  # sorted files
 
-    # Word_processing and tokenisation for each file
+    # word_processing and tokenisation for each file
     for file in sorted_files:
         file_path = join(in_dir, file)
         f = open(file_path, "r")
-        # Set data structure is used to account for repeated words in the same file
+        # set data structure is used to account for repeated words in the same file
         terms = set()
         for line in f:
             new_line = ''
@@ -55,34 +54,33 @@ def build_index(in_dir, out_dict, out_postings):
                 for word in nltk.word_tokenize(sentence):
                     word = stemmer.stem(word)
                     terms.add(word)
-        # Populate the index_dict and postings 'dictionaries'
-        # index_dict = {token: token frequency}
-        # postings = {token: [list of files token exists in]}
+        # populate the index_dict
+        # index_dict = {token: termFrequency}
         for term in terms:
             if term in index_dict.keys():
-                freq = index_dict[term][1]
+                freq = index_dict[term]
                 freq += 1
-                index_dict[term][1] = freq
+                index_dict[term] = freq
             else:
-                index_dict[term] = [0, 1, 0, 0]
+                index_dict[term] = 1
 
-    # Sort dictionary
+    # sort dictionary
     sorted_index_dict_array = sorted(index_dict.items())
     sorted_dict = {}
     for termID, (term, value) in enumerate(sorted_index_dict_array):
         # addition of 1 to ensure termID starts of from value 1
-        value[0] = termID+1
-        sorted_dict[term] = value
-    # print(sorted_dict)
-    # note sorted_dict is now a dictionary of {term : [termID, termFrequency, charrOffset, postingListLength]}
-
-    # Divide list of files to 10 batches(BSBI)
+        termID+=1
+        termFrequency = value
+        sorted_dict[term] = [termID,termFrequency]
+    # dictionary is now {term : [termID, termFrequency]}
+    
+    # divide list of files to 10 or more batches(BSBI)
     count = count_files(in_dir)
-    n = count//2  # Tested with 2 blocks
+    n = count//10
     blocks = [sorted_files[x:x+n] for x in range(0, count, n)]
     print('Batches: \n', blocks)
 
-    # Processing block
+    # process block
     batch_number = 1
     for block in blocks:
         posting_dict = {}
@@ -106,7 +104,8 @@ def build_index(in_dir, out_dict, out_postings):
                     posting_dict[termID].append(int(file))
                 else:
                     posting_dict[termID] = [int(file)]
-        # Create and save postings
+
+        # create and save postings
         postings = create_posting_lists(posting_dict)
         file_name = out_postings+'_{}.txt'.format(batch_number)
         postings_out = open(file_name, 'w')
@@ -115,12 +114,13 @@ def build_index(in_dir, out_dict, out_postings):
         postings_out.close()
         batch_number += 1
 
-    # Merge posting lists - BSBI
+    # merge posting lists - BSBI
     final_posting = {}
     number_of_terms = len(sorted_dict.keys())
     print('No of terms: ',number_of_terms)
     open(out_postings, 'w').close()
-    # For each term, read the relevant line from all blocks
+
+    # for each term, read the relevant line from all blocks
     char_offset = 0
     for i in range(1, number_of_terms+1):
         combined_lines = []
@@ -131,34 +131,42 @@ def build_index(in_dir, out_dict, out_postings):
                 new_line = split_line[1:]
                 for k in range(0, len(new_line)):
                     combined_lines.append(int(new_line[k]))
+
+        # convert arrays to strings
         combined_lines_str = ""
-        # Turn array into string to be written into postings_file
         for l in combined_lines:
             combined_lines_str += str(l)
             combined_lines_str += ' '
-        #combined_lines_str += '\n'
+
+        # write final strings to main postings file
         with open(out_postings, 'a') as postings_file:
             postings_file.write(combined_lines_str)
 
-        # Add charOffset + string length to dictionary
+        # add charOffset + string length to dictionary
         for key in sorted_dict.keys():
             if sorted_dict[key][0] == i:
-                tempArray = sorted_dict[key]
-                tempArray[2] = char_offset
-                tempArray[3] = len(combined_lines_str)
-                sorted_dict[key] = tempArray
+                termId = sorted_dict[key][0]
+                doc_freq = sorted_dict[key][1]
+                finalArray = (termId,doc_freq,char_offset,len(combined_lines_str))
+                sorted_dict[key] = finalArray
         char_offset += len(combined_lines_str)
 
+    # remove batch files
+    for i in range(1,batch_number):
+        os.remove("{}_{}.txt".format(out_postings,i))
+
+    #Save dictionary using pickle
     pickle.dump(sorted_dict, open(out_dict, "wb"))
+
     print('done!')
 
     #TESTING
     #print(sorted_dict)
-    #print('Char-offset for york', sorted_dict['york'][2])
+    #print('Char-offset for yemen', sorted_dict['yemen'][2])
     #temp = open(out_postings, "r")
     #print('SEEKING...')
-    #temp.seek(sorted_dict['york'][2],0)
-    #print(temp.read(sorted_dict['york'][3]))
+    #temp.seek(sorted_dict['yemen'][2],0)
+    #print(temp.read(sorted_dict['yemen'][3]))
 
 '''
 OLD CODE
