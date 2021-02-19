@@ -8,6 +8,7 @@ import string
 import os
 import pickle
 import math
+import linecache
 from os import listdir
 from os.path import join, isfile
 from nltk.stem.porter import PorterStemmer
@@ -72,7 +73,7 @@ def build_index(in_dir, out_dict, out_postings):
         # addition of 1 to ensure termID starts of from value 1
         value[0] = termID+1
         sorted_dict[term] = value
-    print(sorted_dict)
+    # print(sorted_dict)
     # note sorted_dict is now a dictionary of {term : [termID, termFrequency, charrOffset]}
 
     # Divide list of files to 10 batches(BSBI)
@@ -103,7 +104,6 @@ def build_index(in_dir, out_dict, out_postings):
                 termID = sorted_dict[term][0]
                 if termID in posting_dict.keys():
                     posting_dict[termID].append(int(file))
-                        posting_dict[key].append(int(file))
                 else:
                     posting_dict[termID] = [int(file)]
         # Create and save postings
@@ -115,9 +115,45 @@ def build_index(in_dir, out_dict, out_postings):
         postings_out.close()
         batch_number += 1
 
-    # Merge posting lists
+    # Merge posting lists - BSBI
 
     '''To FILL IN'''
+    final_posting = {}
+    number_of_terms = len(sorted_dict.keys())
+    print(number_of_terms)
+    open(out_postings, 'w').close()
+    # For each term, read the relevant line from all blocks
+    for i in range(1, number_of_terms+1):
+        combined_lines = []
+        for j in range(1, batch_number):
+            line = linecache.getline(out_postings+'_{}.txt'.format(j), i)
+            split_line = line.split()
+            if (len(split_line)) > 0:
+                new_line = split_line[1:]
+                for k in range(0, len(new_line)):
+                    combined_lines.append(int(new_line[k]))
+        combined_lines_str = ""
+        # Turn array into string to be written into postings_file
+        for l in combined_lines:
+            combined_lines_str += str(l)
+            combined_lines_str += ' '
+        combined_lines_str += '\n'
+        with open(out_postings, 'a') as postings_file:
+            postings_file.write(combined_lines_str)
+    # print(sorted_dict)
+
+    # Add charOffset to dictionary
+    char_offset = 0
+    for i in range(1, number_of_terms+1):
+        line = linecache.getline(out_postings, i)
+        length_of_line = (len(line)-2)
+        for key in sorted_dict.keys():
+            if sorted_dict[key][0] == i:
+                tempArray = sorted_dict[key]
+                tempArray[2] = char_offset
+                sorted_dict[key] = tempArray
+        char_offset += length_of_line
+    # print(sorted_dict)
 
     # Save dictionary
     pickle.dump(sorted_dict, open(out_dict, "wb"))
@@ -137,7 +173,7 @@ OLD CODE
     # Save dictionary
     pickle.dump(sorted_index_dict, open(out_dict, "wb"))
     print('done!')
-    
+
 '''
 
 
