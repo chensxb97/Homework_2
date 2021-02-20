@@ -1,0 +1,6 @@
+year AND would
+the AND NOT that
+year AND (would AND NOT that)
+purchas OR qtr
+purchas OR (qtr AND NOT that)
+qtr OR quarter

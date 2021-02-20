@@ -1,0 +1,690 @@
+039:1 
+099:5 
+1:9 
+100:5 6 
+1009:6 
+106:1 
+1073:6 
+11:6 13 
+1118:6 
+1176:6 
+119:11 
+11905:19 
+12:6 13 
+124:5 
+125:1 10 
+126:14 
+127:18 
+130:6 
+132:6 
+132000:11 
+135:5 
+14:18 
+145:6 
+1453:6 
+1498:6 
+15:1 12 
+150:6 10 
+1511:13 
+153:18 
+155221:1 
+156:5 
+158:14 
+159:6 14 
+1646:6 
+165:5 
+16558:6 
+1661:6 
+1750:1 
+1780:1 
+1824:6 
+1850:1 
+1870:1 
+1875:1 
+1880:1 
+19:5 
+192:5 
+1981:5 
+1984:5 
+1985:11 
+198586:6 
+1986:5 6 12 13 18 19 
+198687:1 6 
+1987:9 
+198788:1 
+1988:18 
+1st:12 
+20:6 18 
+200:6 
+200000:10 
+204:6 
+211:6 
+2185:6 
+22:1 
+2227000:13 
+227:1 
+228:1 
+2285000:13 
+23:5 9 
+2325:1 
+234:5 
+236:6 
+2375:1 
+2380:1 
+24:12 
+240:5 
+2400:1 
+245:6 
+25:5 9 
+251:6 
+255:5 
+265:5 
+26924:6 
+27:1 
+28:1 12 
+2858000:11 
+2918:13 
+2985:13 
+2986000:13 
+2992:11 
+2nd:13 
+30:18 
+307:14 
+308:14 
+31:13 
+315:5 
+3152:14 
+32:6 
+325:5 
+325i:5 
+3272:11 
+329:6 
+337:6 
+3373:14 
+3376000:13 
+34:11 18 
+340:1 
+348:6 
+35:1 
+350:1 
+36:18 
+37:6 
+37000:19 
+374:6 
+399:6 
+40:10 18 
+4104000:13 
+411:13 
+41610:6 
+434:13 
+4340:1 
+4345:1 
+4350:1 
+4351:1 
+4400:1 
+4403:11 
+4415:1 
+442000:13 
+445:5 
+4450:1 
+4480:1 
+45:1 
+451:6 
+465:5 
+4723:11 
+4797:11 
+480:6 
+4841000:13 
+486:6 
+487:6 
+4th:11 14 18 
+50000:10 
+5086000:13 
+5102:11 
+51482:5 
+516:13 
+517:13 
+536:5 
+554:5 
+558:6 
+5693:13 
+581:1 
+593:1 
+6:5 
+60:1 
+613:1 
+615:6 
+618:6 
+62:1 
+63:6 
+64:1 
+66:14 
+662:14 
+671:12 
+68:6 
+70:6 
+7182:5 
+73:14 
+75:10 
+753:1 
+761:6 
+785:1 
+79:6 
+807000:11 
+808:6 
+82:12 
+827:6 
+8720:6 
+874:6 
+90:6 
+995:1 
+9971:14 
+a:1 9 10 12 18 
+accept:19 
+acquir:10 
+acquisit:12 18 
+act:18 
+addit:10 
+administr:12 
+after:1 5 13 18 
+again:1 
+against:1 
+agricultur:5 19 
+all:1 
+allevi:1 
+almost:1 
+alon:18 
+also:1 6 9 10 18 
+although:1 
+am:13 
+an:1 9 10 18 19 
+analyst:18 
+and:1 5 6 10 13 18 19 
+ani:10 12 
+ann:18 
+announc:19 
+annual:9 
+anticip:18 
+apprais:12 
+approv:9 
+apr:6 
+april:9 12 19 
+aprilmay:1 
+are:1 10 
+area:1 
+argentin:6 
+argentina:1 
+around:1 
+arrang:18 
+arriv:1 
+arroba:1 
+as:1 5 6 9 12 
+asset:11 
+at:1 9 10 
+aug:1 
+augsept:1 
+australia:18 
+author:9 
+avail:1 5 11 
+averag:5 
+avg:5 13 
+award:19 
+bag:1 
+bahia:1 
+barley:5 
+be:1 10 12 18 19 
+bean:1 
+becaus:12 
+been:1 18 
+below:12 
+benefit:18 
+billion:14 18 
+blender:18 
+board:6 9 
+bonu:19 
+book:1 
+bottom:18 
+bracket:6 
+brazil:18 
+brazilian:1 
+bread:6 
+brownforman:14 
+but:10 
+butter:1 
+buy:10 
+buyer:1 
+by:1 
+cake:1 
+calcul:13 
+call:5 
+canada:18 
+capit:9 12 
+carniv:1 
+carri:11 
+carryforward:13 
+ccc:19 
+certain:10 
+certif:1 
+chairman:18 
+champion:9 
+chang:10 
+chicago:18 
+circumst:10 
+co:12 18 
+cobanco:11 
+cocoa:1 
+come:1 
+comissaria:1 
+commiss:1 
+commod:19 
+common:9 10 
+compani:9 10 12 18 19 
+complet:10 19 
+comput:10 
+condit:10 
+conduct:12 
+connect:12 
+consider:12 
+consign:1 
+continu:1 10 
+control:10 
+convert:1 
+corn:5 
+cornsorghum:5 
+corp:18 
+corpor:19 
+cost:10 
+cover:5 19 
+covert:1 
+credit:13 19 
+crop:1 6 
+cruzado:1 
+ct:11 12 13 14 18 
+cumul:1 
+currenc:1 
+current:1 10 12 
+cwt:5 
+dairi:18 
+dean:18 
+dec:1 
+decemb:18 
+declin:12 
+delay:12 
+deliv:1 
+deliveri:10 
+depart:5 19 
+deposit:11 
+deriv:18 
+destin:1 
+detail:6 
+dificulti:1 
+director:9 
+dividend:13 
+dlr:1 10 11 12 14 18 19 
+dlrsbusorghum:5 
+dot:10 
+doubt:1 
+dougla:18 
+dri:1 
+drought:1 
+due:12 
+earli:1 12 18 
+earlier:1 18 
+earn:12 18 
+ebi:18 
+effect:18 
+elgin:18 
+end:1 12 18 
+enhanc:19 
+enough:18 
+ensur:10 
+enter:5 
+entri:18 
+equal:10 
+estim:1 
+exceed:10 18 
+exclud:13 
+exclus:10 
+exercis:10 
+expect:1 18 
+expens:12 
+experi:18 
+experienc:1 
+export:1 6 19 
+extraordinari:11 
+fall:18 
+farmer:1 
+farmerown:5 
+feb:6 
+februari:1 5 6 12 
+feedgrain:5 
+few:1 
+figur:1 6 
+final:1 
+first:12 
+fiscal:12 18 
+fit:1 
+five:9 10 11 
+fiveday:5 
+flour:19 
+fob:1 
+follow:5 6 
+food:18 
+for:1 5 6 9 10 13 18 19 
+form:10 19 
+forward:11 
+four:13 19 
+fourth:18 
+from:9 11 13 18 19 
+frozen:18 
+futur:6 10 
+gain:11 
+gener:10 
+go:1 
+good:1 
+grain:5 6 
+grainoilse:6 
+ha:1 10 18 19 
+hand:1 
+harvest:1 
+have:1 5 12 
+he:18 
+held:1 
+help:10 
+higher:12 
+hold:10 
+houston:10 
+how:1 
+howard:18 
+humid:1 
+hundr:1 
+i:5 
+if:10 
+ii:5 
+iii:5 
+impact:10 
+improv:1 10 18 
+in:1 6 9 12 18 19 
+inc:9 10 11 12 13 14 18 
+includ:1 10 11 12 
+increas:9 10 
+initi:19 
+intern:13 
+inventori:19 
+involv:10 
+is:1 12 18 19 
+issu:12 
+it:1 9 10 12 18 19 
+iv:5 
+jan:13 
+januari:1 5 
+japan:18 
+jul:6 
+juli:1 5 
+jun:6 
+junejuli:1 
+kenneth:18 
+kilo:1 
+kingdom:18 
+label:10 
+larsen:18 
+last:1 12 18 
+late:1 12 18 
+lb:5 
+level:1 5 
+licens:18 
+license:10 12 
+light:1 
+like:12 
+limit:1 
+line:18 
+linoil:6 
+linse:6 
+liquor:1 
+loan:5 11 
+long:19 
+loss:13 
+lower:1 12 
+ltam:13 
+ltbfd:14 
+ltcbco:11 
+ltch:9 
+ltcpml:10 
+ltd:18 
+ltdf:18 
+ltmcd:18 
+ltomt:12 
+ltsedio:10 
+ltwoodco:10 
+lugano:10 
+made:1 
+maiz:6 
+major:18 
+make:1 10 
+mar:6 
+march:1 6 12 
+marchapril:1 
+marchmay:19 
+market:10 
+matrix:10 
+mattress:12 
+matur:5 
+may:1 6 12 18 
+mcdonald:18 
+mean:1 
+meet:9 
+midday:1 
+middl:12 
+middlemen:1 
+milk:18 
+mln:1 9 10 11 12 13 14 
+month:6 
+move:10 
+mth:13 14 
+much:1 
+na:5 
+name:1 
+nanot:5 
+nation:5 
+natl:5 
+nearbi:1 
+net:11 12 13 14 
+new:1 
+nil:6 13 
+nine:13 14 
+normal:1 
+north:19 
+not:1 10 11 
+note:11 12 13 
+now:1 
+nv:10 
+oat:5 
+obtain:1 
+occur:10 
+oct:5 
+octdec:1 
+of:1 6 9 10 11 12 13 18 19 
+off:18 
+offer:1 19 
+ohio:12 
+oil:6 
+oilse:6 
+old:1 
+on:1 
+one:10 14 
+onli:1 
+open:1 
+oper:10 13 
+or:11 12 13 
+our:18 
+outstand:10 12 
+over:1 
+overal:18 
+paid:19 
+part:1 10 
+pay:10 
+payment:13 
+pct:10 12 18 
+per:1 5 10 11 13 19 
+perform:18 
+period:1 13 18 
+pillsburi:19 
+plan:10 
+port:1 
+practic:1 
+prefer:13 
+presid:18 
+prev:6 
+price:1 5 10 
+printer:10 
+prior:13 18 
+probabl:18 
+processor:1 18 
+product:6 9 10 
+profit:12 13 
+program:19 
+project:18 
+prospect:1 
+provid:18 
+publish:1 
+purchas:10 19 
+qtr:11 12 13 14 18 
+qualiti:1 
+quarter:12 18 
+rang:18 
+rate:5 
+ratex:5 
+recent:1 
+recommend:9 
+record:9 
+reflect:5 
+reform:18 
+regist:1 
+registr:6 
+relat:12 
+releas:5 
+reluct:1 
+reorgan:10 
+repeat:18 
+report:5 12 18 
+reserv:5 
+restor:1 
+result:12 13 
+reuter:6 
+rev:13 14 
+review:1 
+right:10 
+rose:1 
+routin:1 
+ryan:18 
+said:1 9 10 12 18 19 
+sale:1 10 12 18 19 
+same:1 18 
+seali:12 
+season:1 
+sedio:10 
+see:18 
+seem:1 
+sell:1 
+sept:1 
+seven:12 13 
+share:9 10 12 18 
+sharehold:9 18 
+shipment:1 6 19 
+shipper:1 
+should:18 
+show:6 
+shower:1 
+shr:11 13 14 
+sinc:1 
+six:13 
+slightli:18 
+smith:1 
+sold:1 10 
+some:1 
+sorghum:5 6 
+soybean:6 
+split:9 
+spot:1 
+stage:1 
+stand:1 
+still:1 
+stock:9 10 12 
+strong:18 
+subproduct:6 
+substanti:12 
+sunflowerse:6 
+sunoil:6 
+superior:1 
+switzerland:10 
+system:10 
+tag:10 
+tax:11 18 
+technolgi:10 
+technolog:10 
+temporao:1 
+termin:10 
+tex:10 
+than:12 
+that:1 12 18 
+the:1 5 6 9 10 12 18 19 
+their:1 6 
+there:1 
+these:12 
+thi:1 12 
+thirdquart:18 
+those:6 18 
+thousand:1 6 
+through:5 
+throughout:1 
+ticket:10 
+time:1 10 
+to:1 6 9 10 12 18 19 
+told:18 
+ton:19 
+tonn:1 6 19 
+too:18 
+total:1 6 10 
+trade:1 
+two:13 
+twoforon:9 
+typic:12 
+under:1 10 
+unit:18 
+up:10 18 
+uruguay:1 
+us:1 5 18 19 
+usda:19 
+v:5 
+variou:18 
+veget:6 18 
+vi:5 
+view:1 
+vote:9 
+vs:11 13 14 
+wa:1 18 19 
+warrant:10 
+week:1 
+weekli:1 
+well:12 
+went:1 
+were:1 6 10 
+west:18 
+weve:18 
+wheat:5 6 19 
+wheatbarley:5 
+whether:18 
+which:1 
+will:1 12 18 19 
+with:1 12 
+woodco:10 
+worldwid:10 
+would:1 10 12 18 
+x:5 
+x1986:5 
+ydlr:5 
+year:1 10 11 12 18 
+yearago:18 
+yemen:19 
+york:1 
+zone:1 
