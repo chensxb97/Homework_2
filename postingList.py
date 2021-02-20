@@ -17,10 +17,14 @@ class postingList:
 
 		# populate postingList
 		if postingStr != None:
-			doc_ids = [int(i) for i in postingStr.split()]
-			doc_ids.sort()
-			for doc_id in doc_ids:
-				self.insert(ListNode(doc_id)) 
+			if type(postingStr) == str: # if input argument is of type string
+				doc_ids = [int(i) for i in postingStr.split()]
+				doc_ids.sort()
+				for doc_id in doc_ids:
+					self.insert(ListNode(doc_id))
+			else: # if input argument is of type list
+				for doc_id in postingStr:
+					self.insert(ListNode(doc_id))
 
 	# insertion at back of list
 	def insert(self, node):
@@ -32,22 +36,13 @@ class postingList:
 			self.tail = node
 		self.length +=1
 
-	# returns length of list
-	def getLength(self):
-		return self.length
-
-	# prints list
-	def printList(self):
-		result = ''
+	def convertToList(self):
+		result = []
 		cur = self.head
-		while cur.next!=None:
-			result+=str(cur.doc_id)
-			result+='->'
+		while cur!=None:
+			result.append(cur.doc_id)
 			cur = cur.next
-		if result == None:
-			print('Empty list')
-		else:
-			print(result[:-2])
+		return result
 
 	# gets node via search index
 	def getNode(self, index):
