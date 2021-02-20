@@ -75,10 +75,10 @@ def run_search(dict_file, postings_file, queries_file, results_file):
         while len(stack) > 0:
             # queue now contains tokens and operands in the right order
             queue.append(stack.pop())
-        print('Queue: ', queue)
-        print('Stack: ', stack)
+        # print('Queue: ', queue)
+        # print('Stack: ', stack)
 
-        # process query (STACK IMPLEMENTATION FIRST)
+        # process query (STACK IMPLEMENTATION)
         for item in queue:
             # obtain posting lists from tokens
             if item not in operators:
@@ -86,48 +86,35 @@ def run_search(dict_file, postings_file, queries_file, results_file):
             elif item == 'OR':
                 item1 = stack.pop()
                 item2 = stack.pop()
-                if type(item1) is not set:
-                    if item1 in sorted_dict.keys():
-                        postings.seek(sorted_dict[item1][2], 0)
-                        tokenSet1 = set(postings.read(sorted_dict[item1][3]))
-                    else:
-                        tokenSet1 = set()
-                if type(item2) is not set:
-                    if item2 in sorted_dict.keys():
-                        postings.seek(sorted_dict[item2][2], 0)
-                        tokenSet2 = set(postings.read(sorted_dict[item2][3]))
-                    else:
-                        tokenSet2 = set()
+                tokenSet1 = turnIntoSet(item1, sorted_dict, postings)
+                tokenSet2 = turnIntoSet(item2, sorted_dict, postings)
                 stack.append(OR(tokenSet1, tokenSet2))
             elif item == 'AND':
                 item1 = stack.pop()
                 item2 = stack.pop()
-                if type(item1) is not set:
-                    if item1 in sorted_dict.keys():
-                        postings.seek(sorted_dict[item1][2], 0)
-                        tokenSet1 = set(postings.read(
-                            sorted_dict[item1][3]).split())
-                    else:
-                        tokenSet1 = set()
-                if type(item2) is not set:
-                    if item2 in sorted_dict.keys():
-                        postings.seek(sorted_dict[item2][2], 0)
-                        tokenSet2 = set(postings.read(
-                            sorted_dict[item2][3]).split())
-                    else:
-                        tokenSet2 = set()
+                tokenSet1 = turnIntoSet(item1, sorted_dict, postings)
+                tokenSet2 = turnIntoSet(item2, sorted_dict, postings)
                 stack.append(AND(tokenSet1, tokenSet2))
             elif item == 'NOT':
                 item1 = stack.pop()
-                if type(item1) is not set:
-                    if item1 in sorted_dict.keys():
-                        postings.seek(sorted_dict[item1][2], 0)
-                        tokenSet1 = set(postings.read(
-                            sorted_dict[item1][3]).split())
-                    else:
-                        tokenSet1 = set()
+                tokenSet1 = turnIntoSet(item1, sorted_dict, postings)
                 stack.append(NOT(tokenSet1, globalSet))
-        print('Final Stack: ', stack)
+        i += 1
+        print('Final Stack: ', sorted(stack[0]))
+
+
+def turnIntoSet(item, sorted_dict, postings):
+    if type(item) is not set:
+        if item in sorted_dict.keys():
+            postings.seek(sorted_dict[item][2], 0)
+            tokenSet = set(postings.read(
+                sorted_dict[item][3]).split())
+            tokenSet = set(int(token) for token in tokenSet)
+        else:
+            tokenSet = set()
+    else:
+        tokenSet = item
+    return tokenSet
 
 
 def OR(tokenSet1, tokenSet2):
@@ -135,7 +122,7 @@ def OR(tokenSet1, tokenSet2):
 
 
 def NOT(tokenSet1, globalSet):
-    return globalSet - tokenSet1
+    return (globalSet - tokenSet1)
 
 
 def AND(tokenSet1, tokenSet2):
