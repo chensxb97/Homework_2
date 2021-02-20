@@ -29,7 +29,12 @@ def run_search(dict_file, postings_file, queries_file, results_file):
     # dictionary
     in_dict = open(dict_file, 'rb')
     sorted_dict = pickle.load(in_dict)
+    number_of_terms = len(sorted_dict.keys())
+    globalSet = set(range(1, number_of_terms))
     # print(sorted_dict)
+
+    # posting lists
+    postings = open(postings_file, 'r')
 
     # queries
     queries = open(queries_file, 'r')
@@ -73,23 +78,68 @@ def run_search(dict_file, postings_file, queries_file, results_file):
         print('Queue: ', queue)
         print('Stack: ', stack)
 
-        # process query
+        # process query (STACK IMPLEMENTATION FIRST)
         for item in queue:
             # obtain posting lists from tokens
             if item not in operators:
-                pass  # continue from here
+                stack.append(item)
+            elif item == 'OR':
+                item1 = stack.pop()
+                item2 = stack.pop()
+                if type(item1) is not set:
+                    if item1 in sorted_dict.keys():
+                        postings.seek(sorted_dict[item1][2], 0)
+                        tokenSet1 = set(postings.read(sorted_dict[item1][3]))
+                    else:
+                        tokenSet1 = set()
+                if type(item2) is not set:
+                    if item2 in sorted_dict.keys():
+                        postings.seek(sorted_dict[item2][2], 0)
+                        tokenSet2 = set(postings.read(sorted_dict[item2][3]))
+                    else:
+                        tokenSet2 = set()
+                stack.append(OR(tokenSet1, tokenSet2))
+            elif item == 'AND':
+                item1 = stack.pop()
+                item2 = stack.pop()
+                if type(item1) is not set:
+                    if item1 in sorted_dict.keys():
+                        postings.seek(sorted_dict[item1][2], 0)
+                        tokenSet1 = set(postings.read(
+                            sorted_dict[item1][3]).split())
+                    else:
+                        tokenSet1 = set()
+                if type(item2) is not set:
+                    if item2 in sorted_dict.keys():
+                        postings.seek(sorted_dict[item2][2], 0)
+                        tokenSet2 = set(postings.read(
+                            sorted_dict[item2][3]).split())
+                    else:
+                        tokenSet2 = set()
+                stack.append(AND(tokenSet1, tokenSet2))
+            elif item == 'NOT':
+                item1 = stack.pop()
+                if type(item1) is not set:
+                    if item1 in sorted_dict.keys():
+                        postings.seek(sorted_dict[item1][2], 0)
+                        tokenSet1 = set(postings.read(
+                            sorted_dict[item1][3]).split())
+                    else:
+                        tokenSet1 = set()
+                stack.append(NOT(tokenSet1, globalSet))
+        print('Final Stack: ', stack)
 
 
-def OR():
-    pass
+def OR(tokenSet1, tokenSet2):
+    return tokenSet1 | tokenSet2
 
 
-def NOT():
-    pass
+def NOT(tokenSet1, globalSet):
+    return globalSet - tokenSet1
 
 
-def AND():
-    pass
+def AND(tokenSet1, tokenSet2):
+    return tokenSet1 & tokenSet2
 
 
 dictionary_file = postings_file = file_of_queries = output_file_of_results = None
