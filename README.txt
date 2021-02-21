@@ -61,7 +61,6 @@ For each query, we implemented the Shunting Yard algorithm to transform each que
 After running through the algorithm, each query will be stored in an output queue, using the Reverse Polish notation as shown below.
 
 Before: peter AND (john OR NOT jane)
-
 After: peter john jane NOT OR AND
 
 As shown, the algorithm ensures that the order of precedence '() -> NOT -> AND -> OR' is taken care of.
@@ -80,10 +79,8 @@ At the end of the loop, the result stack is the answer to the query, which is wr
 The operator functions can be described as follows:
 
 NOT: Returns a posting list of all docIds not found in the input posting list by comparing it with a global posting list.
-
 AND: Returns the intersection of 2 posting lists, where only docIds that exist in both lists are
 inserted into the result posting list. Skip pointers are implemented to speed up the traversal process.
-
 OR: Returns the union of 2 posting lists. 
 
 == Files included with this submission ==
