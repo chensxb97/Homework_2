@@ -23,7 +23,7 @@ def usage():
 
 def build_index(in_dir, out_dict, out_postings):
     """
-    Build index from documents stored in the input directory,
+    build index from documents stored in the input directory,
     then output the dictionary file and postings file
     """
     print('indexing...')
@@ -79,7 +79,6 @@ def build_index(in_dir, out_dict, out_postings):
     count = count_files(in_dir)
     n = count//10
     blocks = [sorted_files[x:x+n] for x in range(0, count, n)]
-    print('Batches: \n', blocks)
 
     # Process blocks
     batch_number = 1
@@ -118,7 +117,6 @@ def build_index(in_dir, out_dict, out_postings):
     # Merge posting lists(BSBI)
     final_posting = {}
     number_of_terms = len(sorted_dict.keys())
-    print('No of terms: ', number_of_terms)
     open(out_postings, 'w').close()
 
     # For each term, read and merge the relevant lines(posting lists) from all blocks  
