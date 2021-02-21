@@ -19,37 +19,36 @@ def usage():
 
 def run_search(dict_file, postings_file, queries_file, results_file):
     """
-    using the given dictionary file and postings file,
-    perform searching on the given queries file and output the results to a file
+    using the input dict_file and postings_file,
+    perform searching on the given queries_file and output the results to results_file
     """
     print('running search on the queries...')
+
     # Initialise stemmer
     stemmer = PorterStemmer()
 
-    # dictionary
+    # Open and load dictionary
     in_dict = open(dict_file, 'rb')
     sorted_dict = pickle.load(in_dict)
     number_of_terms = len(sorted_dict.keys())
-    # print(sorted_dict)
 
-    # Global postingList
+    # Create global postingList with all termIDs [1, 2, 3 ..., number_of_terms]
     globalPostingList = postingList(list(range(1, number_of_terms))).addSkips()
 
-    # posting lists
+    # Open posting lists, but not loaded into memory
     postings = open(postings_file, 'r')
 
-    # queries
+    # Open queries file
     queries = open(queries_file, 'r')
 
-    # implement shunting-yard algorithm in increasing order of precedence - OR least impt
+    # Implement shunting-yard algorithm in increasing order of precedence - OR least precedence, followed by AND, then NOT
     operators = ['OR', 'AND', 'NOT']
-    i = 1
     results_array = []
-    for q in queries:
+    for i, q in enumerate(queries):
         stack = []  # output stack
         queue = []  # output queue
         values = q.split()
-        print('Processing query {}'.format(i))
+        print('Processing query {}'.format(i+1))
         for val in values:
             if val not in operators and '(' not in val and ')' not in val:
                 # Tokens will be processed to lower case and stemmed for comparision with dictionary
@@ -66,23 +65,24 @@ def run_search(dict_file, postings_file, queries_file, results_file):
                 else:
                     stack.append(val)  # push the operator to stack
             elif '(' in val:
-                queue.append(val[1:])  # queue token
+                queue.append(val[1:])  # queue token to the right of '('
                 stack.append(val[0])  # push paranthesis to stack
             elif ')' in val:
-                queue.append(val[:-1])  # queue token
+                queue.append(val[:-1])  # queue token to the left of ')'
                 while stack[-1] != '(':
                     queue.append(stack.pop())
                 stack.pop()  # remove left paranthesis
                 # do not push right parantheseis to stack
 
         while len(stack) > 0:
-            # queue now contains tokens and operands in the right order
+            # Pop all values from stack into queue
+            # Queue now contains tokens and operands in the right order
             queue.append(stack.pop())
 
-        # process query (postingListClass IMPLEMENTATION)
+        # Process query in queue (postingListClass IMPLEMENTATION)
         for item in queue:
             if item not in operators:
-                # convert items to corresponding postingLists
+                # Convert items to corresponding postingLists
                 stack.append(processItem(item, sorted_dict, postings))
             elif item == 'NOT':
                 list1 = stack.pop()
@@ -94,7 +94,6 @@ def run_search(dict_file, postings_file, queries_file, results_file):
                     stack.append(OR(list1, list2))  # OR
                 else:
                     stack.append(AND(list1, list2))  # AND
-        i += 1
         # Convert postingLists to strings for output
         results_array.append(stack[0].convertToString())
 
@@ -103,10 +102,11 @@ def run_search(dict_file, postings_file, queries_file, results_file):
         for r in results_array:
             results_file.write(r + '\n')
 
-    # extract postingList from dictionary
-
 
 def processItem(item, sorted_dict, postings):
+    """
+    given a term, construct the term's postingList using dictionary in memory
+    """
     if item == None:
         print('Item is empty')
         return None
@@ -121,6 +121,9 @@ def processItem(item, sorted_dict, postings):
 
 
 def NOT(list1, globalPostingList):
+    """
+    given postingList1, return a postingList of all docIDs not found in postingList1
+    """
     result = postingList()
     cur1 = list1.head
     curGlobal = globalPostingList.head
@@ -143,6 +146,9 @@ def NOT(list1, globalPostingList):
 
 
 def AND(list1, list2):
+    """
+    return intersection of postingList1 and postingList2 as a postingList
+    """
     result = postingList()
     cur1 = list1.head
     cur2 = list2.head
@@ -166,6 +172,9 @@ def AND(list1, list2):
 
 
 def OR(list1, list2):
+    """
+    return union of postingList1 and postingList2 as a postingList
+    """
     result = postingList()
     cur1 = list1.head
     cur2 = list2.head
