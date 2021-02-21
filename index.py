@@ -13,7 +13,8 @@ from os import listdir
 from os.path import join, isfile
 from nltk.stem.porter import PorterStemmer
 
-# python index.py -i '<INSERT_PATH>\sample_data' -d dictionary.txt -p postings.txt
+# python3 index.py -i './sample_data' -d dictionary.txt -p postings.txt
+
 
 def usage():
     print("usage: " +
@@ -69,11 +70,11 @@ def build_index(in_dir, out_dict, out_postings):
     sorted_dict = {}
     for termID, (term, value) in enumerate(sorted_index_dict_array):
         # addition of 1 to ensure termID starts of from value 1
-        termID+=1
+        termID += 1
         termFrequency = value
-        sorted_dict[term] = [termID,termFrequency]
+        sorted_dict[term] = [termID, termFrequency]
     # dictionary is now {term : [termID, termFrequency]}
-    
+
     # divide list of files to 10 or more batches(BSBI)
     count = count_files(in_dir)
     n = count//10
@@ -117,7 +118,7 @@ def build_index(in_dir, out_dict, out_postings):
     # merge posting lists - BSBI
     final_posting = {}
     number_of_terms = len(sorted_dict.keys())
-    print('No of terms: ',number_of_terms)
+    print('No of terms: ', number_of_terms)
     open(out_postings, 'w').close()
 
     # for each term, read the relevant line from all blocks
@@ -147,13 +148,14 @@ def build_index(in_dir, out_dict, out_postings):
             if sorted_dict[key][0] == i:
                 termId = sorted_dict[key][0]
                 doc_freq = sorted_dict[key][1]
-                finalArray = (termId,doc_freq,char_offset,len(combined_lines_str))
+                finalArray = (termId, doc_freq, char_offset,
+                              len(combined_lines_str))
                 sorted_dict[key] = finalArray
         char_offset += len(combined_lines_str)
 
     # remove batch files
-    for i in range(1,batch_number):
-        os.remove("{}_{}.txt".format(out_postings,i))
+    for i in range(1, batch_number):
+        os.remove("{}_{}.txt".format(out_postings, i))
 
     # save dictionary using pickle
     # dictionary is now {term : [termID, termFrequency,charOffSet,strLength]}
@@ -161,13 +163,14 @@ def build_index(in_dir, out_dict, out_postings):
 
     print('done!')
 
-    #TESTING
-    #print(sorted_dict)
+    # TESTING
+    # print(sorted_dict)
     #print('Char-offset for yemen', sorted_dict['yemen'][2])
     #temp = open(out_postings, "r")
-    #print('SEEKING...')
-    #temp.seek(sorted_dict['yemen'][2],0)
-    #print(temp.read(sorted_dict['yemen'][3]))
+    # print('SEEKING...')
+    # temp.seek(sorted_dict['yemen'][2],0)
+    # print(temp.read(sorted_dict['yemen'][3]))
+
 
 '''
 OLD CODE
@@ -217,6 +220,7 @@ OLD CODE
 #         start += len(posting_str)
 #     return sorted_dict
 '''
+
 
 def count_files(dir):
     return len([1 for x in list(os.scandir(dir)) if x.is_file()])
