@@ -54,10 +54,37 @@ We also delete all unnecessary files (such as the block posting files for each b
 
 = Searching =
 
-The search algorithm takes in the pickled dictionary, postings file, list of queries as input arguments.
+The search algorithm takes in the pickled dictionary, postings file, queries file as input arguments.
 The objective is to process each query and arrive at its list of docIds.
 
-<Please fill in>
+For each query, we implemented the Shunting Yard algorithm to transform each query to a processable format.
+After running through the algorithm, each query will be stored in an output queue, using the Reverse Polish notation as shown below.
+
+Before: peter AND (john OR NOT jane)
+
+After: peter john jane NOT OR AND
+
+As shown, the algorithm ensures that the order of precedence '() -> NOT -> AND -> OR' is taken care of.
+
+To read the query, we read the values from the output queue. Then process the following in a loop.
+
+1. Once a token is read, we use it as a key to look up the dictionary for its relevant posting list, using seek(charOffset,0) and read(stringLength).
+We then convert the posting list(string) into a postingList object(linked list with skip pointers). 
+We then push the result back into the stack.
+2. Once an operator(NOT, AND, OR) is read, we pop 1 postingList(NOT) or 2 postingLists(AND, OR) from the stack 
+and process them with the corresponding operator functions.
+3. Push the result back into the stack.
+
+At the end of the loop, the result stack is the answer to the query, which is written to the output results file.
+
+The operator functions can be described as follows:
+
+NOT: Returns a posting list of all docIds not found in the input posting list by comparing it with a global posting list.
+
+AND: Returns the intersection of 2 posting lists, where only docIds that exist in both lists are
+inserted into the result posting list. Skip pointers are implemented to speed up the traversal process.
+
+OR: Returns the union of 2 posting lists. 
 
 == Files included with this submission ==
 
