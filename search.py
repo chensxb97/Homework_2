@@ -107,13 +107,13 @@ def processItem(term, sorted_dict, postings):
     """
     Given a term, construct the term's postingList using dictionary in memory
     """
-    if item == None:
-        print('Item is empty')
+    if term == None:
+        print('Item is null')
         return None
     else:
-        if item in sorted_dict.keys():
-            postings.seek(sorted_dict[item][2], 0)
-            posting_str = (postings.read(sorted_dict[item][3]))
+        if term in sorted_dict.keys():
+            postings.seek(sorted_dict[term][2], 0)
+            posting_str = (postings.read(sorted_dict[term][3]))
             posting_l = postingList(posting_str).addSkips()
         else:
             posting_l = postingList(None)
