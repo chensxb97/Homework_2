@@ -23,7 +23,7 @@ def usage():
 
 def build_index(in_dir, out_dict, out_postings):
     """
-    build index from documents stored in the input directory,
+    Build index from documents stored in the input directory,
     then output the dictionary file and postings file
     """
     print('indexing...')
@@ -160,13 +160,20 @@ def build_index(in_dir, out_dict, out_postings):
     # Final dictionary is now {term : [termID, termFrequency,charOffSet,strLength]}
     # Save dictionary using pickle
     pickle.dump(sorted_dict, open(out_dict, "wb"))
-    
+
     print('done!')
-    
+
 def count_files(dir):
+    '''
+    Return the number of files found in the directory
+    '''
     return len([1 for x in list(os.scandir(dir)) if x.is_file()])
 
 def create_posting_lists(posting_dict):
+    '''
+    Given a dictionary of postings, for each term, create posting strings with addition of newlines*(termId), 
+    which determines the line number which the posting will be inserted in each postings file, prior to merging
+    '''
     sorted_postings = sorted(posting_dict.items())
     posting_lists = []
     prev = 1
