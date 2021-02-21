@@ -48,7 +48,6 @@ def run_search(dict_file, postings_file, queries_file, results_file):
         stack = []  # Output stack
         queue = []  # Output queue
         values = q.split()
-        print('Processing query {}'.format(i+1))
         for val in values:
             if val not in operators and '(' not in val and ')' not in val:
                 # Tokens will be processed to lower case and stemmed for comparision with dictionary
@@ -101,6 +100,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
     with open(results_file, 'w') as results_file:
         for r in results_array:
             results_file.write(r + '\n')
+
     print('done!')
 
 def processItem(term, sorted_dict, postings):
@@ -147,7 +147,7 @@ def NOT(postingList1, globalPostingList):
 
 def AND(postingList1, postingList2):
     """
-    Return intersection of postingList1 and postingList2 as a postingList
+    Return intersection of postingList1 and postingList2
     """
     result = postingList()
     cur1 = postingList1.head
@@ -173,7 +173,7 @@ def AND(postingList1, postingList2):
 
 def OR(postingList1, postingList2):
     """
-    Return union of postingList1 and postingList2 as a postingList
+    Return union of postingList1 and postingList2
     """
     result = postingList()
     cur1 = postingList1.head
