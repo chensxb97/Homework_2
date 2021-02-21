@@ -45,8 +45,8 @@ def run_search(dict_file, postings_file, queries_file, results_file):
     operators = ['OR', 'AND', 'NOT']
     results_array = []
     for i, q in enumerate(queries):
-        stack = []  # output stack
-        queue = []  # output queue
+        stack = []  # Output stack
+        queue = []  # Output queue
         values = q.split()
         print('Processing query {}'.format(i+1))
         for val in values:
@@ -54,35 +54,35 @@ def run_search(dict_file, postings_file, queries_file, results_file):
                 # Tokens will be processed to lower case and stemmed for comparision with dictionary
                 val = val.lower()
                 val = stemmer.stem(val)
-                queue.append(val)  # queue tokens
+                queue.append(val)  # Queue tokens
             elif val == 'NOT':
-                stack.append(val)  # push 'NOT' to stack
+                stack.append(val)  # Push 'NOT' to stack
             elif val == 'AND' or val == 'OR':
                 while (len(stack) != 0 and stack[-1] != '(' and (operators.index(val) < operators.index(stack[-1])
                                                                  or operators.index(val) == operators.index(stack[-1]))):
-                    # pop operators with greater precedence from stack into queue
+                    # Pop operators with greater precedence from stack into queue
                     queue.append(stack.pop())
                 else:
-                    stack.append(val)  # push the operator to stack
+                    stack.append(val)  # Push the operator to stack
             elif '(' in val:
-                queue.append(val[1:])  # queue token to the right of '('
-                stack.append(val[0])  # push paranthesis to stack
+                queue.append(val[1:])  # Queue token to the right of '('
+                stack.append(val[0])  # Push paranthesis to stack
             elif ')' in val:
-                queue.append(val[:-1])  # queue token to the left of ')'
+                queue.append(val[:-1])  # Queue token to the left of ')'
                 while stack[-1] != '(':
                     queue.append(stack.pop())
-                stack.pop()  # remove left paranthesis
-                # do not push right parantheseis to stack
+                stack.pop()  # Remove left paranthesis
+                # Do not push right parantheseis to stack
 
         while len(stack) > 0:
             # Pop all values from stack into queue
             # Queue now contains tokens and operands in the right order
             queue.append(stack.pop())
 
-        # Process query in queue (postingListClass IMPLEMENTATION)
+        # Process query in queue
         for item in queue:
             if item not in operators:
-                # Convert items to corresponding postingLists
+                # Extract posting lists and store them as 'postingList' objects
                 stack.append(processItem(item, sorted_dict, postings))
             elif item == 'NOT':
                 list1 = stack.pop()
@@ -105,7 +105,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
 
 def processItem(item, sorted_dict, postings):
     """
-    given a term, construct the term's postingList using dictionary in memory
+    Given a term, construct the term's postingList using dictionary in memory
     """
     if item == None:
         print('Item is empty')
@@ -122,7 +122,7 @@ def processItem(item, sorted_dict, postings):
 
 def NOT(list1, globalPostingList):
     """
-    given postingList1, return a postingList of all docIDs not found in postingList1
+    Given postingList1, return a postingList of all docIDs not found in postingList1
     """
     result = postingList()
     cur1 = list1.head
@@ -147,23 +147,23 @@ def NOT(list1, globalPostingList):
 
 def AND(list1, list2):
     """
-    return intersection of postingList1 and postingList2 as a postingList
+    Return intersection of postingList1 and postingList2 as a postingList
     """
     result = postingList()
     cur1 = list1.head
     cur2 = list2.head
     while cur1 != None and cur2 != None:
-        # skip to next node if the id of skipped node is less than the id of the compared node
+        # Skip to next node if the id of skipped node is less than the id of the compared node
         while cur1.skip_to != None and cur1.skip_to.doc_id < cur2.doc_id and cur1.doc_id != cur2.doc_id:
             cur1 = cur1.skip_to
         while cur2.skip_to != None and cur2.skip_to.doc_id < cur1.doc_id and cur1.doc_id != cur2.doc_id:
             cur2 = cur2.skip_to
-        # insert ids if they are the same
+        # Insert ids if they are the same
         if cur1.doc_id == cur2.doc_id:
             result.insert(ListNode(cur1.doc_id))
             cur1 = cur1.next
             cur2 = cur2.next
-        # traversal
+        # Traverse through the first list if id of first list is less than that of the second
         elif cur1.doc_id < cur2.doc_id:
             cur1 = cur1.next
         else:
@@ -173,19 +173,19 @@ def AND(list1, list2):
 
 def OR(list1, list2):
     """
-    return union of postingList1 and postingList2 as a postingList
+    Return union of postingList1 and postingList2 as a postingList
     """
     result = postingList()
     cur1 = list1.head
     cur2 = list2.head
     while cur1 != None and cur2 != None:
-        # insert id if ids are the same
+        # Insert id if ids are the same
         if cur1.doc_id == cur2.doc_id:
             result.insert(ListNode(cur1.doc_id))
             cur1 = cur1.next
             cur2 = cur2.next
         else:
-            # traverse through the first list if the doc-ids are less than the second list's second doc-id
+            # Traverse through the first list if the doc-ids are less than the second list's second doc-id
             while cur1 != None and cur2 != None and cur1.doc_id < cur2.doc_id:
                 result.insert(ListNode(cur1.doc_id))
                 cur1 = cur1.next
@@ -193,7 +193,7 @@ def OR(list1, list2):
                 result.insert(ListNode(cur2.doc_id))
                 cur2 = cur2.next
 
-    # traverse the remaining elements of the other list
+    # Traverse the remaining elements of the other list
     if cur1 == None:
         while cur2 != None:
             result.insert(ListNode(cur2.doc_id))
