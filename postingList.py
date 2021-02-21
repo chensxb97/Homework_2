@@ -24,7 +24,7 @@ class postingList:
                 doc_ids.sort()
                 for doc_id in doc_ids:
                     self.insert(ListNode(doc_id))
-            else:  # if input argument is of type list
+            elif type(postingStr) == list or type(postingStr) == set:  # if input argument is of type list/set
                 for doc_id in postingStr:
                     self.insert(ListNode(doc_id))
 
