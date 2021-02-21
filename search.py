@@ -101,7 +101,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
     with open(results_file, 'w') as results_file:
         for r in results_array:
             results_file.write(r + '\n')
-
+    print('done!')
 
 def processItem(term, sorted_dict, postings):
     """
