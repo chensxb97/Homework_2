@@ -103,7 +103,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
             results_file.write(r + '\n')
 
 
-def processItem(item, sorted_dict, postings):
+def processItem(term, sorted_dict, postings):
     """
     Given a term, construct the term's postingList using dictionary in memory
     """
@@ -120,12 +120,12 @@ def processItem(item, sorted_dict, postings):
     return posting_l
 
 
-def NOT(list1, globalPostingList):
+def NOT(postingList1, globalPostingList):
     """
     Given postingList1, return a postingList of all docIDs not found in postingList1
     """
     result = postingList()
-    cur1 = list1.head
+    cur1 = postingList1.head
     curGlobal = globalPostingList.head
     while cur1 != None:
         # traverse global list if the global ids are less than list id
@@ -145,13 +145,13 @@ def NOT(list1, globalPostingList):
     return result.addSkips()
 
 
-def AND(list1, list2):
+def AND(postingList1, postingList2):
     """
     Return intersection of postingList1 and postingList2 as a postingList
     """
     result = postingList()
-    cur1 = list1.head
-    cur2 = list2.head
+    cur1 = postingList1.head
+    cur2 = postingList2.head
     while cur1 != None and cur2 != None:
         # Skip to next node if the id of skipped node is less than the id of the compared node
         while cur1.skip_to != None and cur1.skip_to.doc_id < cur2.doc_id and cur1.doc_id != cur2.doc_id:
@@ -171,13 +171,13 @@ def AND(list1, list2):
     return result.addSkips()
 
 
-def OR(list1, list2):
+def OR(postingList1, postingList2):
     """
     Return union of postingList1 and postingList2 as a postingList
     """
     result = postingList()
-    cur1 = list1.head
-    cur2 = list2.head
+    cur1 = postingList1.head
+    cur2 = postingList2.head
     while cur1 != None and cur2 != None:
         # Insert id if ids are the same
         if cur1.doc_id == cur2.doc_id:
