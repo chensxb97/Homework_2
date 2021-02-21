@@ -9,7 +9,8 @@ import os
 from nltk.stem.porter import PorterStemmer
 from postingList import postingList, ListNode
 
-# python search.py -d dictionary.txt -p postings.txt  -q queries.txt -o results.txt
+# python3 search.py -d dictionary.txt -p postings.txt  -q queries.txt -o results.txt
+
 
 def usage():
     print("usage: " +
@@ -29,10 +30,10 @@ def run_search(dict_file, postings_file, queries_file, results_file):
     in_dict = open(dict_file, 'rb')
     sorted_dict = pickle.load(in_dict)
     number_of_terms = len(sorted_dict.keys())
-    #print(sorted_dict)
+    # print(sorted_dict)
 
     # Global postingList
-    globalPostingList = postingList(list(range(1, number_of_terms))).addSkips() 
+    globalPostingList = postingList(list(range(1, number_of_terms))).addSkips()
 
     # posting lists
     postings = open(postings_file, 'r')
@@ -43,6 +44,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
     # implement shunting-yard algorithm in increasing order of precedence - OR least impt
     operators = ['OR', 'AND', 'NOT']
     i = 1
+    results_array = []
     for q in queries:
         stack = []  # output stack
         queue = []  # output queue
@@ -82,39 +84,49 @@ def run_search(dict_file, postings_file, queries_file, results_file):
         # process query (postingListClass IMPLEMENTATION)
         for item in queue:
             if item not in operators:
-                stack.append(processItem(item,sorted_dict,postings)) # convert items to corresponding postingLists
+                # convert items to corresponding postingLists
+                stack.append(processItem(item, sorted_dict, postings))
             elif item == 'NOT':
                 list1 = stack.pop()
-                stack.append(NOT(list1,globalPostingList)) # NOT
-            elif item == 'OR' or item =='AND':
+                stack.append(NOT(list1, globalPostingList))  # NOT
+            elif item == 'OR' or item == 'AND':
                 list1 = stack.pop()
                 list2 = stack.pop()
-                if item =='OR':
-                    stack.append(OR(list1,list2)) # OR
-                else: 
-                    stack.append(AND(list1, list2)) # AND
-        i+=1
-        #print('Final Stack: ',stack[0].convertToList()) # Result
+                if item == 'OR':
+                    stack.append(OR(list1, list2))  # OR
+                else:
+                    stack.append(AND(list1, list2))  # AND
+        i += 1
+        # Convert postingLists to strings for output
+        results_array.append(stack[0].convertToString())
 
-# extract postingList from dictionary 
-def processItem(item,sorted_dict, postings):
+    # Write results into given results_file
+    with open(results_file, 'w') as results_file:
+        for r in results_array:
+            results_file.write(r + '\n')
+
+    # extract postingList from dictionary
+
+
+def processItem(item, sorted_dict, postings):
     if item == None:
         print('Item is empty')
         return None
     else:
         if item in sorted_dict.keys():
-            postings.seek(sorted_dict[item][2],0)
+            postings.seek(sorted_dict[item][2], 0)
             posting_str = (postings.read(sorted_dict[item][3]))
             posting_l = postingList(posting_str).addSkips()
     return posting_l
+
 
 def NOT(list1, globalPostingList):
     result = postingList()
     cur1 = list1.head
     curGlobal = globalPostingList.head
-    while cur1!= None:
+    while cur1 != None:
         # traverse global list if the global ids are less than list id
-        while cur1 != None and curGlobal.doc_id <cur1.doc_id:
+        while cur1 != None and curGlobal.doc_id < cur1.doc_id:
             result.insert(ListNode(curGlobal.doc_id))
             curGlobal = curGlobal.next
         # Insert ids if ids are not the same
@@ -124,12 +136,13 @@ def NOT(list1, globalPostingList):
         curGlobal = curGlobal.next
         cur1 = cur1.next
     # traverse the remaining elements of the global list
-    while curGlobal!=None:
+    while curGlobal != None:
         result.insert(ListNode(curGlobal.doc_id))
         curGlobal = curGlobal.next
     return result.addSkips()
 
-def AND(list1,list2):
+
+def AND(list1, list2):
     result = postingList()
     cur1 = list1.head
     cur2 = list2.head
@@ -142,16 +155,17 @@ def AND(list1,list2):
         # insert ids if they are the same
         if cur1.doc_id == cur2.doc_id:
             result.insert(ListNode(cur1.doc_id))
-            cur1=cur1.next
-            cur2=cur2.next
+            cur1 = cur1.next
+            cur2 = cur2.next
         # traversal
         elif cur1.doc_id < cur2.doc_id:
             cur1 = cur1.next
         else:
             cur2 = cur2.next
-    return result.addSkips() 
-    
-def OR(list1,list2):
+    return result.addSkips()
+
+
+def OR(list1, list2):
     result = postingList()
     cur1 = list1.head
     cur2 = list2.head
@@ -159,26 +173,26 @@ def OR(list1,list2):
         # insert id if ids are the same
         if cur1.doc_id == cur2.doc_id:
             result.insert(ListNode(cur1.doc_id))
-            cur1=cur1.next
-            cur2=cur2.next
+            cur1 = cur1.next
+            cur2 = cur2.next
         else:
             # traverse through the first list if the doc-ids are less than the second list's second doc-id
-            while cur1!=None and cur2!=None and cur1.doc_id < cur2.doc_id:
+            while cur1 != None and cur2 != None and cur1.doc_id < cur2.doc_id:
                 result.insert(ListNode(cur1.doc_id))
                 cur1 = cur1.next
-            while cur2!= None and cur1!=None and cur2.doc_id < cur1.doc_id:
+            while cur2 != None and cur1 != None and cur2.doc_id < cur1.doc_id:
                 result.insert(ListNode(cur2.doc_id))
                 cur2 = cur2.next
 
     # traverse the remaining elements of the other list
-    if cur1==None:
-        while cur2!=None:
+    if cur1 == None:
+        while cur2 != None:
             result.insert(ListNode(cur2.doc_id))
             cur2 = cur2.next
-    if cur2==None:
-        while cur1!=None:
+    if cur2 == None:
+        while cur1 != None:
             result.insert(ListNode(cur1.doc_id))
-            cur1=cur1.next 
+            cur1 = cur1.next
     return result.addSkips()
 
 
