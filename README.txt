@@ -34,17 +34,17 @@ Terms are stored in a set (to ensure no duplicates), and are saved in the dictio
 
 The dictionary is also sorted by term in ascending order.
 
-Secondly, we build the posting list index with a BSBI approach. We split files into 11 blocks 
-before processing each block into its own individual index.
+Secondly, we build the posting list index using BSBI. We split the directory of files into 11 blocks. 
+We will then process each block's files and write to individual posting files.
 
-For each block, we process the words the same - removing all punctuation, case-folding to lower case and stemming. 
-A postings dictionary 'posting_dict' is created - {termID: [array of docIDs]}. 
-The posting_dict will take termIDs as a key, and the list of docIds the term appears in as the value.
-In our algorithm, every list of docIds will be converted into lists of docID strings.
-Following which, each block's posting lists will be written to block postings files.
+For each block, we process the terms as usual - removing all punctuation, case-folding to lower case and stemming. 
+A postings dictionary 'posting_dict' is created with the following format:
+{termID: [array of docIDs]}.
+We then process each array of docIds, converting them into strings prior to writing each of them to block posting files at specific
+line numbers(corresponding to their termId).
 
 After all blocks have been processed, we proceed to merge the posting list files.
-We loop through each term in the index dictionary and obtain the term's posting lists from every block postings file using linecache.
+We loop through every term in the index dictionary and obtain the term's posting lists from every block postings file using linecache.
 We merge the docIds in the posting lists and write the merged posting list onto the finalised postings file.
 
 During the merging process, charOffset and stringLength values for each term are updated in the dictionary. 
