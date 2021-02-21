@@ -78,8 +78,6 @@ def run_search(dict_file, postings_file, queries_file, results_file):
         while len(stack) > 0:
             # queue now contains tokens and operands in the right order
             queue.append(stack.pop())
-        # print('Queue: ', queue)
-        # print('Stack: ', stack)
 
         # process query (postingListClass IMPLEMENTATION)
         for item in queue:
@@ -117,6 +115,8 @@ def processItem(item, sorted_dict, postings):
             postings.seek(sorted_dict[item][2], 0)
             posting_str = (postings.read(sorted_dict[item][3]))
             posting_l = postingList(posting_str).addSkips()
+        else:
+            posting_l = postingList(None)
     return posting_l
 
 
