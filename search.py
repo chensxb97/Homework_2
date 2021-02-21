@@ -196,54 +196,7 @@ def OR(list1, list2):
     return result.addSkips()
 
 
-'''
-        # process query (SET IMPLEMENTATION)
-        for item in queue:
-            # obtain posting lists from tokens
-            if item not in operators:
-                stack.append(item)
-            elif item == 'OR':
-                item1 = stack.pop()
-                item2 = stack.pop()
-                tokenSet1 = turnIntoSet(item1, sorted_dict, postings)
-                tokenSet2 = turnIntoSet(item2, sorted_dict, postings)
-                stack.append(OR(tokenSet1, tokenSet2))
-            elif item == 'AND':
-                item1 = stack.pop()
-                item2 = stack.pop()
-                tokenSet1 = turnIntoSet(item1, sorted_dict, postings)
-                tokenSet2 = turnIntoSet(item2, sorted_dict, postings)
-                stack.append(AND(tokenSet1, tokenSet2))
-            elif item == 'NOT':
-                item1 = stack.pop()
-                tokenSet1 = turnIntoSet(item1, sorted_dict, postings)
-                stack.append(NOT(tokenSet1, globalSet))
-        i += 1
-        print('Final Stack: ', sorted(stack[0]))
-
-def turnIntoSet(item, sorted_dict, postings):
-    if type(item) is not set:
-        if item in sorted_dict.keys():
-            postings.seek(sorted_dict[item][2], 0)
-            tokenSet = set(postings.read(
-                sorted_dict[item][3]).split())
-            tokenSet = set(int(token) for token in tokenSet)
-        else:
-            tokenSet = set()
-    else:
-        tokenSet = item
-    return tokenSet
-
-def NOT(tokenSet1, globalSet):
-    return (globalSet - tokenSet1)
-
-def AND(tokenSet1, tokenSet2):
-    return tokenSet1 & tokenSet2
-
-def OR(tokenSet1, tokenSet2):
-    return tokenSet1 | tokenSet2
-'''
-
+# For terminal commands and I/O handling
 dictionary_file = postings_file = file_of_queries = output_file_of_results = None
 
 try:
