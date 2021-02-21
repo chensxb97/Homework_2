@@ -21,8 +21,7 @@ for Boolean Retrieval.
 
 The index dictionary is built by processing terms from text files in the Reuters Training data. 
 
-We process all terms by removing all punctuation, case-folding all words to lower case and stemming 
-using PorterStemmer.
+We process all terms by removing all punctuation, case-folding all words to lower case and stemming using PorterStemmer.
 Terms are stored in a set (to ensure no duplicates), and are saved in the dictionary in this format: 
 {term: [termID, termFrequency, charOffset, stringLength]}
 
@@ -45,7 +44,7 @@ line numbers(corresponding to their termId).
 
 After all blocks have been processed, we proceed to merge the posting list files.
 We loop through every term in the index dictionary and obtain the term's posting lists from every block postings file using linecache.
-We merge the docIds in the posting lists and write the merged posting list onto the finalised postings file.
+We merge the docIds from the block files, and write the merged posting list onto the finalised postings file.
 
 During the merging process, charOffset and stringLength values for each term are updated in the dictionary. 
 
