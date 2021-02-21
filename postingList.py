@@ -1,34 +1,32 @@
 import math
 
-
 class ListNode:
-    # Initilisation
+    # Initialisation
     def __init__(self, doc_id=None):
         self.doc_id = int(doc_id)
         self.next = None
         self.skip_to = None
 
-
 class postingList:
-    # Initilisation
+    # Initialisation
     def __init__(self, postingStr=None):
         self.has_skips = False
         self.length = 0
         self.head = None
         self.tail = None
 
-        # populate postingList
+        # Populate postingList
         if postingStr != None:
-            if type(postingStr) == str:  # if input argument is of type string
+            if type(postingStr) == str: # Input argument of type: string
                 doc_ids = [int(i) for i in postingStr.split()]
                 doc_ids.sort()
                 for doc_id in doc_ids:
                     self.insert(ListNode(doc_id))
-            elif type(postingStr) == list or type(postingStr) == set:  # if input argument is of type list/set
+            elif type(postingStr) == list or type(postingStr) == set: # Input argument of type: list or set
                 for doc_id in postingStr:
                     self.insert(ListNode(doc_id))
 
-    # insertion at back of list
+    # Insertion at back of list
     def insert(self, node):
         if self.head == None:
             self.head = node
@@ -38,14 +36,7 @@ class postingList:
             self.tail = node
         self.length += 1
 
-    # def convertToList(self):
-    #     result = []
-    #     cur = self.head
-    #     while cur != None:
-    #         result.append(cur.doc_id)
-    #         cur = cur.next
-    #     return result
-
+    # Convert object to string
     def convertToString(self):
         result = ''
         cur = self.head
@@ -55,7 +46,7 @@ class postingList:
         result = result.rstrip()
         return result
 
-    # gets node via search index
+    # Gets node via search index
     def getNode(self, index):
         cur = self.head
         while index > 0:
@@ -63,18 +54,18 @@ class postingList:
             index -= 1
         return cur
 
-    # calculates skip interval
+    # Calculates skip interval based on the postingList length
     def skipInterval(self):
         skip_interval = math.floor(math.sqrt(self.length))
         return skip_interval
 
-    # sets the skip pointer of node1 to node2
+    # Sets the skip pointer of node1 to node2
     def skip(self, idx1, idx2):
         node1 = self.getNode(idx1)
         node2 = self.getNode(idx2)
         node1.skip_to = node2
 
-    # adds skips to list
+    # Adds skips
     def addSkips(self):
         if self.has_skips == False:
             node1 = 0
@@ -87,5 +78,4 @@ class postingList:
             self.has_skips = True
         else:
             print('Posting list already added skips')
-
         return self
