@@ -49,15 +49,15 @@ We merge the docIds from the block files, and write the merged posting list onto
 During the merging process, charOffset and stringLength values for each term are updated in the dictionary. 
 
 Lastly, we save the finalised output postings file consisting of all merged posting lists.
-We also save the finalised dictionary where we pickle it such that we will be able to store it in memory for easy use in search.py
-We also delete all unnecessary files (such as the block posting files for each block, which are no longer necessary as they have been merged).
+We also save the finalised dictionary as a pickled file so that they could be easily re-loaded in memory to be used in search.py.
+We also delete all unnecessary files (such as the block posting files for each block as they have already been merged).
 
 = Searching =
 
 The search algorithm takes in the pickled dictionary, postings file, queries file as input arguments.
 The objective is to process each query and arrive at its list of docIds.
 
-For each query, we implemented the Shunting Yard algorithm to transform each query to a processable format.
+Before reading the query, we first implement the Shunting Yard algorithm to transform each query to a processable format.
 After running through the algorithm, each query will be stored in an output queue, using the Reverse Polish notation as shown below.
 
 Before: peter AND (john OR NOT jane)
@@ -67,18 +67,17 @@ As shown, the algorithm ensures that the order of precedence '() -> NOT -> AND -
 
 To read the query, we read the values from the output queue. Then process the following in a loop.
 
-1. Once a token is read, we use it as a key to look up the dictionary for its relevant posting list, using seek(charOffset,0) and read(stringLength).
-We then convert the posting list(string) into a postingList object(linked list with skip pointers). 
+1. If a token is read, we use it as a key to look up the dictionary for its relevant posting list, using seek(charOffset,0) and read(stringLength). We then convert the posting list(string) into a postingList object(linked list with skip pointers). 
 We then push the result back into the stack.
-2. Once an operator(NOT, AND, OR) is read, we pop 1 postingList(NOT) or 2 postingLists(AND, OR) from the stack 
+2. If an operator(NOT, AND, OR) is read, we pop 1 postingList(NOT) or 2 postingLists(AND, OR) from the stack 
 and process them with the corresponding operator functions.
 3. Push the result back into the stack.
 
-At the end of the loop, the result stack is the answer to the query, which is written to the output results file.
+At the end of the loop, the final result in the stack is the answer to the query, which is written to the output results file.
 
 The operator functions can be described as follows:
 
-NOT: Returns a posting list of all docIds not found in the input posting list by comparing it with a global posting list.
+NOT: Returns the inverse of 1 posting list by comparing the input posting list with a global posting list.
 AND: Returns the intersection of 2 posting lists, where only docIds that exist in both lists are
 inserted into the result posting list. Skip pointers are implemented to speed up the traversal process.
 OR: Returns the union of 2 posting lists. 
