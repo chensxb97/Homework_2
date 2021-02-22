@@ -43,10 +43,10 @@ We then process each array of docIds, converting them into strings prior to writ
 line numbers(corresponding to their termId).
 
 After all blocks have been processed, we proceed to merge the posting list files.
-We loop through every term in the index dictionary and obtain the term's posting lists from every block postings file using linecache.
+We loop through every termId and obtain the term's posting lists from every block postings file using linecache.
 We merge the docIds from the block files, and write the merged posting list onto the finalised postings file.
 
-During the merging process, charOffset and stringLength values for each term are updated in the dictionary. 
+During the merging process, charOffset and stringLength values for each term are updated in the main dictionary. 
 
 Lastly, we save the finalised output postings file consisting of all merged posting lists.
 We also save the finalised dictionary as a pickled file so that they could be easily re-loaded in memory to be used in search.py.
