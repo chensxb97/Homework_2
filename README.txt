@@ -135,11 +135,11 @@ https://www.geeksforgeeks.org/linecache-getline-in-python/
 Using pickle to save dictionary
 https://stackoverflow.com/questions/11218477/how-can-i-use-pickle-to-save-a-dict
 
-Theory of BSBI (For the use of BSBI)
+Theory of BSBI
 https://nlp.stanford.edu/IR-book/html/htmledition/blocked-sort-based-indexing-1.html
 
-Faster postings list intersection with skip pointers algorithm (For optimising the intersection algorithm)
-https://nlp.stanford.edu/IR-book/html/htmledition/faster-postings-list-intersection-via-skip-pointers-1.html
-
-Shunting yard algorithm (For processing queries)
+Shunting yard algorithm
 https://www.youtube.com/watch?v=Jd71l0cHZL0
+
+Faster postings list intersection with skip pointers algorithm
+https://nlp.stanford.edu/IR-book/html/htmledition/faster-postings-list-intersection-via-skip-pointers-1.html
