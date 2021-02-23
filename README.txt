@@ -14,24 +14,19 @@ Give an overview of your program, describe the important algorithms/steps
 in your program, and discuss your experiments in general. A few paragraphs 
 are usually sufficient.
 
-The purpose of this program is to implement indexing and searching techniques
-for Boolean Retrieval.
-
 = Indexing =
 
 The index dictionary is built by processing terms from text files in the Reuters Training data. 
 
 We process all terms by removing all punctuation, case-folding all words to lower case and stemming using PorterStemmer.
-Terms are stored in a set (to ensure no duplicates), and are saved in the dictionary in this format: 
-{term: [termID, termFrequency, charOffset, stringLength]}
+Terms are stored in a set (to ensure no duplicates), and are saved in the dictionary, sorted by term in ascending order, with the 
+following format: {term: [termID, termFrequency, charOffset, stringLength]}.
 
 - term(string) refers to the processed and stemmed word
 - termID(int) is a unique ID associated with each word after the words have all been sorted in ascending order
 - termFrequency(int) is the number of unique documents each term exists in
 - charOffset(int) are character offset values which point to the start of the posting list in the postings file for that term.
 - stringLength(int) states the length of the posting list generated for that term.
-
-The dictionary is also sorted by term in ascending order.
 
 Secondly, we build the posting list index using BSBI. We split the directory of files into 11 blocks. 
 We will then process each block's files and write to individual posting files.
@@ -75,12 +70,18 @@ and process them with the corresponding operator functions.
 
 At the end of the loop, the final result in the stack is the answer to the query, which is written to the output results file.
 
-The operator functions can be described as follows:
+The basic operator functions can be described as follows:
 
 NOT: Returns the inverse of 1 posting list by comparing the input posting list with a global posting list.
 AND: Returns the intersection of 2 posting lists, where only docIds that exist in both lists are
 inserted into the result posting list. Skip pointers are implemented to speed up the traversal process.
 OR: Returns the union of 2 posting lists. 
+
+To improve the speed of the search algorithm, we implemented additional functions to capture and optimise complex operations such as the following.
+
+AND AND: If two ANDs are read, we simply perform 1 AND on the two lists, without having to process 1 more AND operation.
+AND NOT: Returns the intersection of a posting list and an inverted posting list, without having to process the NOT operation first.
+NOT NOT: If two NOTs are read, we do nothing since the inverse of the inverse gives the original posting list.
 
 == Files included with this submission ==
 
@@ -125,4 +126,20 @@ NIL
 <Please list any websites and/or people you consulted with for this
 assignment and state their role>
 
-NIL
+File operations
+https://www.zframez.com/tutorials/python-tutorial-file-operations.html
+
+Using linecache to grab a specific line from a text file
+https://www.geeksforgeeks.org/linecache-getline-in-python/
+
+Using pickle to save dictionary
+https://stackoverflow.com/questions/11218477/how-can-i-use-pickle-to-save-a-dict
+
+Theory of BSBI (For the use of BSBI)
+https://nlp.stanford.edu/IR-book/html/htmledition/blocked-sort-based-indexing-1.html
+
+Faster postings list intersection with skip pointers algorithm (For optimising the intersection algorithm)
+https://nlp.stanford.edu/IR-book/html/htmledition/faster-postings-list-intersection-via-skip-pointers-1.html
+
+Shunting yard algorithm (For processing queries)
+https://www.youtube.com/watch?v=Jd71l0cHZL0
