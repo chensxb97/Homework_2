@@ -55,8 +55,10 @@ def run_search(dict_file, postings_file, queries_file, results_file):
                 val = stemmer.stem(val)
                 queue.append(val)  # Queue tokens
             elif val == 'NOT':
-                if stack[-1] =='NOT':
-                    stack.pop() # If a consecutive NOT is found, we remove the previous NOT from the stack
+                if len(stack) == 0:  # Check if stack is empty
+                    stack.append(val)
+                elif stack[-1] == 'NOT':  # If stack is not empty, check for consecutive NOT
+                    stack.pop()  # If a consecutive NOT is found, we remove the previous NOT from the stack
                 else:
                     stack.append(val)  # Push 'NOT' to stack
             elif val == 'AND' or val == 'OR':
@@ -82,7 +84,6 @@ def run_search(dict_file, postings_file, queries_file, results_file):
             queue.append(stack.pop())
 
         # Process query in queue
-        to_offset = 0
         for item in queue:
             if item not in operators:
                 # Extract posting lists and store them as 'postingList' objects
@@ -90,13 +91,14 @@ def run_search(dict_file, postings_file, queries_file, results_file):
             elif item == 'NOT':
                 list1 = stack.pop()
                 stack.append(NOT(list1, globalPostingList))  # NOT
-            elif item == 'OR' or item == 'AND':
+            elif item == 'OR':
                 list1 = stack.pop()
                 list2 = stack.pop()
-                if item == 'OR':
-                    stack.append(OR(list1, list2))  # OR
-                else:
-                    stack.append(AND(list1, list2))  # AND
+                stack.append(OR(list1, list2))  # OR
+            elif item == 'AND':
+                list1 = stack.pop()
+                list2 = stack.pop()
+                stack.append(AND(list1, list2))  # AND
         # Convert postingLists to strings for output
         results_array.append(stack[0].convertToString())
 
@@ -106,6 +108,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
             results_file.write(r + '\n')
 
     print('done!')
+
 
 def processItem(term, sorted_dict, postings):
     """
