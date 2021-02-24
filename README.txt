@@ -67,10 +67,12 @@ AND: Returns the intersection of 2 posting lists, where only docIds that exist i
 inserted into the result posting list. Skip pointers are implemented to jump ahead redundant nodes to speed up the traversal process.
 OR: Returns the union of 2 posting lists. 
 
-To improve the speed and efficiency of the search algorithm, we included additional logic and separate functions to capture and optimise complex queries such as the following:
+To improve the speed and efficiency of the search algorithm, we added logic to optimise complex queries such as the following:
 NOT NOT: If two NOTs are read, we do nothing since the inverse of the inverse gives the original posting list.
+AND AND: If two ANDs are read, it means we are performing an AND operation on 3 posting lists, therefore, we can optimise the query by performing AND on the two shortest posting lists first, then perform the second AND operation on the result + longest posting list.
+
+Complex operator functions:
 AND NOT: Returns the intersection of a posting list and an inverted posting list directly, without having to process 2 separate operations (NOT, then AND).
-AND AND: If two ANDs are read, it means we are performing an AND operation on 3 posting lists, therefore, we can optimise the query by performing AND on the two smallest posting lists first, then perform another AND operation on the result + the remaining posting list.
 
 == Files included with this submission ==
 
