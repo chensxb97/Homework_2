@@ -55,12 +55,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
                 val = stemmer.stem(val)
                 queue.append(val)  # Queue tokens
             elif val == 'NOT':
-                if len(stack) == 0:  # Check if stack is empty
-                    stack.append(val)
-                elif stack[-1] == 'NOT':  # If stack is not empty, check for consecutive NOT
-                    stack.pop()  # If a consecutive NOT is found, we remove the previous NOT from the stack
-                else:
-                    stack.append(val)  # Push 'NOT' to stack
+                stack.append(val)  # Push 'NOT' to stack
             elif val == 'AND' or val == 'OR':
                 while (len(stack) != 0 and stack[-1] != '(' and (operators.index(val) < operators.index(stack[-1])
                                                                  or operators.index(val) == operators.index(stack[-1]))):
@@ -72,7 +67,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
                 queue.append(val[1:])  # Queue token to the right of '('
                 stack.append(val[0])  # Push paranthesis to stack
             elif ')' in val:
-                queue.append(val[:-1])  # Queue token to the left of ')'
+                queue.append(val[: -1])  # Queue token to the left of ')'
                 while stack[-1] != '(':
                     queue.append(stack.pop())
                 stack.pop()  # Remove left paranthesis
@@ -84,13 +79,25 @@ def run_search(dict_file, postings_file, queries_file, results_file):
             queue.append(stack.pop())
 
         # Process query in queue
-        for item in queue:
+        while queue:
+            item = queue.pop(0)
             if item not in operators:
                 # Extract posting lists and store them as 'postingList' objects
                 stack.append(processItem(item, sorted_dict, postings))
             elif item == 'NOT':
-                list1 = stack.pop()
-                stack.append(NOT(list1, globalPostingList))  # NOT
+                nextItem = queue[0]
+                if nextItem == 'AND':
+                    queue.pop(0)  # Remove AND operation from queue
+                    list1 = stack.pop()
+                    list2 = stack.pop()
+                    # Run query list2 AND NOT list1
+                    stack.append(ANDNOT(list2, list1))
+                elif nextItem == 'NOT':
+                    # Remove NOT operation from queue (NOT NOT negates each other)
+                    queue.pop(0)
+                else:
+                    list1 = stack.pop()
+                    stack.append(NOT(list1, globalPostingList))  # NOT
             elif item == 'OR':
                 list1 = stack.pop()
                 list2 = stack.pop()
@@ -160,21 +167,49 @@ def AND(postingList1, postingList2):
     cur1 = postingList1.head
     cur2 = postingList2.head
     while cur1 != None and cur2 != None:
-        # Skip to next node if the id of skipped node is less than the id of the compared node
-        while cur1.skip_to != None and cur1.skip_to.doc_id < cur2.doc_id and cur1.doc_id != cur2.doc_id:
-            cur1 = cur1.skip_to
-        while cur2.skip_to != None and cur2.skip_to.doc_id < cur1.doc_id and cur1.doc_id != cur2.doc_id:
-            cur2 = cur2.skip_to
         # Insert ids if they are the same
         if cur1.doc_id == cur2.doc_id:
             result.insert(ListNode(cur1.doc_id))
             cur1 = cur1.next
             cur2 = cur2.next
+        # Skip to next node if the id of skipped node is less than the id of the compared node
+        elif cur1.skip_to != None and cur1.skip_to.doc_id < cur2.doc_id:
+            cur1 = cur1.skip_to
+        elif cur2.skip_to != None and cur2.skip_to.doc_id < cur1.doc_id:
+            cur2 = cur2.skip_to
         # Traverse through the first list if id of first list is less than that of the second
         elif cur1.doc_id < cur2.doc_id:
             cur1 = cur1.next
         else:
             cur2 = cur2.next
+    return result.addSkips()
+
+
+def ANDNOT(postingList1, postingList2):
+    """
+    Return intersection of postingList1 and NOT postingList2
+    """
+    result = postingList()
+    cur1 = postingList1.head
+    cur2 = postingList2.head
+    while cur1 != None and cur2 != None:
+        # Traverse down the list if ids are the same
+        if cur1.doc_id == cur2.doc_id:
+            cur1 = cur1.next
+            cur2 = cur2.next
+        # Insert ID1 and traverse through the first list if id of first list is less than that of the second
+        elif cur1.doc_id < cur2.doc_id:
+            result.insert(ListNode(cur1.doc_id))
+            cur1 = cur1.next
+        # If skip pointer of second list less than current id of first list, can skip as all of first list IDs can be inserted into result
+        elif cur2.skip_to != None and cur2.skip_to.doc_id < cur1.doc_id:
+            cur2 = cur2.skip_to
+        else:
+            cur2 = cur2.next
+    # If second list is exhausted, all other IDs in first list should be inserted into the result
+    while cur1 != None:
+        result.insert(ListNode(cur1.doc_id))
+        cur1 = cur1.next
     return result.addSkips()
 
 
