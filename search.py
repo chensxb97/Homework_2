@@ -106,9 +106,36 @@ def run_search(dict_file, postings_file, queries_file, results_file):
                 list2 = stack.pop()
                 stack.append(OR(list1, list2))  # OR
             elif item == 'AND':
+                if queue:
+                    nextItem = queue[0]
+                else:
+                    nextItem = None
+                # Pop top two posting lists of stack for AND operation
                 list1 = stack.pop()
                 list2 = stack.pop()
-                stack.append(AND(list1, list2))  # AND
+                # Check for AND AND operation for query optimization
+                if nextItem == 'AND':
+                    queue.pop(0)  # Remove AND operation from queue
+                    list3 = stack.pop()
+                    # Check for smallest 2 posting lists out of the 3 for query optimization
+                    if list1.length > list2.length and list1.length > list3.length:
+                        shortList1 = list2
+                        shortList2 = list3
+                        longList = list1
+                    elif list2.length > list3.length:
+                        shortList1 = list1
+                        shortList2 = list3
+                        longList = list2
+                    else:
+                        shortList1 = list1
+                        shortList2 = list2
+                        longList = list3
+                    # First evaluate AND operation for two shorter lists
+                    shortList1AND2 = AND(shortList1, shortList2)
+                    # Then evaluate AND operation with the longest list
+                    stack.append(AND(shortList1AND2, longList))
+                else:
+                    stack.append(AND(list1, list2))  # AND
         # Convert postingLists to strings for output
         results_array.append(stack[0].convertToString())
 
