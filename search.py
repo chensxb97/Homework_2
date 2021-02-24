@@ -55,7 +55,10 @@ def run_search(dict_file, postings_file, queries_file, results_file):
                 val = stemmer.stem(val)
                 queue.append(val)  # Queue tokens
             elif val == 'NOT':
-                stack.append(val)  # Push 'NOT' to stack
+                if stack[-1] =='NOT':
+                    stack.pop() # If a consecutive NOT is found, we remove the previous NOT from the stack
+                else:
+                    stack.append(val)  # Push 'NOT' to stack
             elif val == 'AND' or val == 'OR':
                 while (len(stack) != 0 and stack[-1] != '(' and (operators.index(val) < operators.index(stack[-1])
                                                                  or operators.index(val) == operators.index(stack[-1]))):
@@ -79,6 +82,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
             queue.append(stack.pop())
 
         # Process query in queue
+        to_offset = 0
         for item in queue:
             if item not in operators:
                 # Extract posting lists and store them as 'postingList' objects
