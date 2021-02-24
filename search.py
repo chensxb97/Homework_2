@@ -85,7 +85,10 @@ def run_search(dict_file, postings_file, queries_file, results_file):
                 # Extract posting lists and store them as 'postingList' objects
                 stack.append(processItem(item, sorted_dict, postings))
             elif item == 'NOT':
-                nextItem = queue[0]
+                if queue:
+                    nextItem = queue[0]
+                else:
+                    nextItem = None
                 if nextItem == 'AND':
                     queue.pop(0)  # Remove AND operation from queue
                     list1 = stack.pop()
