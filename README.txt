@@ -16,10 +16,7 @@ are usually sufficient.
 
 = Indexing =
 
-The index dictionary is built by processing terms from text files in the Reuters Training data. 
-
-We process all terms by removing all punctuation, case-folding all words to lower case and stemming using PorterStemmer.
-Terms are stored in a set (to ensure no duplicates), and are saved in the dictionary, sorted by term in ascending order, with the 
+The index dictionary is built by processing terms from text files in the Reuters Training data. After removing all punctuation, case-folding all words to lower case and stemming, terms are stored in a set (to ensure no duplicates), and are saved in the dictionary, sorted by term in ascending order, with the 
 following format: {term: [termID, termFrequency, charOffset, stringLength]}.
 
 - term(string) refers to the processed and stemmed word
@@ -29,18 +26,12 @@ following format: {term: [termID, termFrequency, charOffset, stringLength]}.
 - stringLength(int) states the length of the posting list generated for that term.
 
 Secondly, we build the posting list index using BSBI. We split the directory of files into 11 blocks. 
-We will then process each block's files and write to individual posting files.
-
-For each block, we process the terms as usual - removing all punctuation, case-folding to lower case and stemming. 
-A postings dictionary 'posting_dict' is created with the following format:
-{termID: [array of docIDs]}.
-We then process each array of docIds, converting them into strings prior to writing each of them to block posting files at specific
+For each block, we process the tokens as what we've done in previously (removing punctuation, case-folding). A postings dictionary is created with the following format: {termID: [array of docIDs]}. We then process each array of docIds, converting them into strings prior to writing each of them to a posting file at specific
 line numbers(corresponding to their termId).
 
-After all blocks have been processed, we proceed to merge the posting list files.
+After all blocks have been processed, we proceed to merge the 11 generated posting list files.
 We loop through every termId and obtain the term's posting lists from every block postings file using linecache.
 We merge the docIds from the block files, and write the merged posting list onto the finalised postings file.
-
 During the merging process, charOffset and stringLength values for each term are updated in the main dictionary. 
 
 Lastly, we save the finalised output postings file consisting of all merged posting lists.
@@ -71,17 +62,15 @@ and process them with the corresponding operator functions.
 At the end of the loop, the final result in the stack is the answer to the query, which is written to the output results file.
 
 The basic operator functions can be described as follows:
-
 NOT: Returns the inverse of 1 posting list by comparing the input posting list with a global posting list.
 AND: Returns the intersection of 2 posting lists, where only docIds that exist in both lists are
-inserted into the result posting list. Skip pointers are implemented to speed up the traversal process.
+inserted into the result posting list. Skip pointers are implemented to jump ahead redundant nodes to speed up the traversal process.
 OR: Returns the union of 2 posting lists. 
 
-To improve the speed of the search algorithm, we implemented additional functions to capture and optimise complex operations such as the following.
-
-AND AND: If two ANDs are read, we simply perform 1 AND on the two lists, without having to process 1 more AND operation.
-AND NOT: Returns the intersection of a posting list and an inverted posting list, without having to process the NOT operation first.
+To improve the speed and efficiency of the search algorithm, we included additional logic and separate functions to capture and optimise complex queries such as the following:
 NOT NOT: If two NOTs are read, we do nothing since the inverse of the inverse gives the original posting list.
+AND NOT: Returns the intersection of a posting list and an inverted posting list directly, without having to process 2 separate operations (NOT, then AND).
+AND AND: If two ANDs are read, it means we are performing an AND operation on 3 posting lists, therefore, we can optimise the query by performing AND on the two smallest posting lists first, then perform another AND operation on the result + the remaining posting list.
 
 == Files included with this submission ==
 
